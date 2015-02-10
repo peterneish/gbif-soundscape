@@ -9,18 +9,26 @@ function getData(d){
        
        taxa = [];
        $.each( data, function(key, val){
-           var input = $('<input>', {id: key, type: 'text'}).appendTo('.sliders');
-           console.log(val);
-           
-           buildSlider(input, val);
+          processTaxa(val);
        }) 
+    });
+    
+}
+
+function processTaxa(taxa){
+    // create a container
+    var container = $('<div></div>').text(taxa.type).appendTo($('.sliders'));
+    
+    $.each(taxa.data, function(id, taxon){
+        console.log(taxon);
+        var img = $('<img>').attr('src', taxon.image).appendTo(container);
     });
     
 }
 
 function buildSlider(input, tax){
     
-   var init = new Powerange(input);
-    
-    
+   var sliderDiv = document.createElement('div');
+   $('sliders').append(input);
+
 }
