@@ -1,0 +1,36 @@
+{
+  "name": "gbif-soundscape",
+  "version": "1.0.0",
+  "description": "soundscapes from GBIF",
+  "main": "index.js",
+  "scripts": {
+    "start": "beefy index.js:bundle.js --live",
+    "build": "browserify index.js > bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peterneish/gbif-soundscape.git"
+  },
+  "keywords": [
+    "gbif"
+  ],
+  "author": "Peter Neish",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/peterneish/gbif-soundscape/issues"
+  },
+  "homepage": "https://github.com/peterneish/gbif-soundscape",
+  "dependencies": {
+    "browserify": "^8.1.3",
+    "d3-browserify": "^3.4.12"
+  },
+  "devDependencies": {
+    "beefy": "^2.1.3",
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^3.3.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-watchify": "^0.1.0"
+  }
+}
