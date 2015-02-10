@@ -17,7 +17,8 @@ module.exports = function(grunt) {
     },
     copy: {
       dist: {
-        files: [ {src: 'index.*', dest: 'dist/'} ]
+        files: [ {src: 'index.html', dest: 'dist/'},
+                 {src: 'bundle.js', dest: 'dist/'}]
       }
     }
   });
