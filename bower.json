@@ -1,0 +1,25 @@
+{
+  "name": "gbif_soundscape",
+  "main": "app.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/peterneish/gbif-soundscape",
+  "authors": [
+    "Peter Neish <peter.neish@gmail.com>",
+    "Ben Raymond <ben@theraymonds.org>"
+  ],
+  "description": "sounds from GBIF",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.2",
+    "powerange": "~0.0.2",
+    "jquery": "~2.1.3"
+  }
+}
