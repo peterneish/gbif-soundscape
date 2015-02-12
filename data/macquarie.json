@@ -1,0 +1,28 @@
+[
+  {
+   "type": "birds",
+   "data":[
+        {   "name": "Eudyptes chrysocome", 
+            "audio": "http://www.tierstimmenarchiv.de/recordings/Eudchr03_short.mp3", 
+            "image": "http://media.eol.org/content/2011/08/04/11/71319_580_360.jpg"
+        },
+        {   "name": "Larus dominicanus", 
+            "audio": "http://www.tierstimmenarchiv.de/recordings/Larus_dominicanus_DIG0158_29_short.mp3", 
+            "image": "http://media.eol.org/content/2011/08/04/13/98204_580_360.jpg"
+        },
+    	{   "name": "Phoebetria palpebrata", 
+    	    "audio": "http://www.tierstimmenarchiv.de/recordings/Phoebetria_palpebrata_DIG0158_10_short.mp3", 
+    	    "image": "http://media.eol.org/content/2013/11/27/13/76360_580_360.jpg"
+    	},
+    	{"name": "Pterodroma lessonii", "audio": "http://www.tierstimmenarchiv.de/recordings/Pterodroma_lessonii_DIG0158_03_short.mp3", "image": ""},
+    	{"name": "Pygoscelis papua", "audio": "http://www.tierstimmenarchiv.de/recordings/Pygoscelis_papua_DIG0157_18_short.mp3", "image": ""},
+    	{"name": "Sterna paradisaea", "audio": "http://www.tierstimmenarchiv.de/recordings/Sterna_paradisaea_V1802_21_short.mp3", "image": ""},
+    	{"name": "Sterna vittata", "audio": "http://www.tierstimmenarchiv.de/recordings/Sterna_vittata_DIG0158_18_short.mp3", "image": ""}
+   ]
+    
+},
+   {
+    "type": "frogs",
+    "data" : []
+   }
+]
