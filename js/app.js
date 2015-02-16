@@ -1,34 +1,27 @@
 $(document).ready(function(){
-  getData("data/macquarie.json");
+  getData("data/sounds.json");
 });
 
-var taxa = [];
+var localities = [];
+var active_locality = {};
+
 
 function getData(d){
     $.getJSON(d, function( data){
        
-       taxa = [];
        $.each( data, function(key, val){
-          processTaxa(val);
+          localities.push(val);
+          console.log(val);
        }) 
     });
     
-}
-
-function processTaxa(taxa){
-    // create a container
-    var container = $('<div></div>').text(taxa.type).appendTo($('.sliders'));
-    
-    $.each(taxa.data, function(id, taxon){
-        console.log(taxon);
-        var img = $('<img>').attr('src', taxon.image).appendTo(container);
-    });
+    addControls();
     
 }
 
-function buildSlider(input, tax){
-    
-   var sliderDiv = document.createElement('div');
-   $('sliders').append(input);
-
+addControls(){
+    $.each(localities, funciton(l){
+        $('nav').append(l.locality);
+    })
 }
+

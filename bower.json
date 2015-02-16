@@ -20,6 +20,7 @@
   "dependencies": {
     "bootstrap": "~3.3.2",
     "jquery": "~2.1.3",
-    "seiyria-bootstrap-slider": "~4.4.2"
+    "seiyria-bootstrap-slider": "~4.4.2",
+    "handlebars": "~3.0.0"
   }
 }
