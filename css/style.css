@@ -12,6 +12,10 @@ body {
 	border: 1px solid #eee;
 }
 
+#map {
+	height: 240px;
+}
+
 .clear {
 	clear:both;
 }
