@@ -1,4 +1,3 @@
-
 var localities = [];
 var active_locality = {};
 
@@ -16,6 +15,7 @@ var active_locality = {};
 function addControls(){
 
     $.each(localities, function(i,l){
-        $('nav').append(l.locality);
+		console.log(l);
+        $('#info').append('<p>'+l.locality+'</p>');
     });
 }

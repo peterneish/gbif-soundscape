@@ -5,16 +5,21 @@ html, body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 body {
-  padding-top: 50px;
+	padding-top:50px;
 }
-.container{
+
+#info, #map, #sounds{
+	border: 1px solid #eee;
+}
+
+.clear {
+	clear:both;
+}
+
+
+#container{
     
     
 }
-.sliders {
-  height: 100%;
-  width: 100%;
-  padding: 40px 15px;
-  text-align: center;
-}
+
 
