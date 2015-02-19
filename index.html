@@ -27,37 +27,78 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">GBIF Soundscape</a>
+          <a class="navbar-brand" href="">GBIF Soundscape</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
+           
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
-          </ul>
+		</ul>
+		<div class="btn-group" role="group" aria-label="...">
+		  <button type="button" class="btn btn-default navbar-btn">Show All</button>
+		  <button type="button" class="btn btn-default navbar-btn">Birds Only</button>
+		  <button type="button" class="btn btn-default navbar-btn">Frogs Only</button>
+		  <button type="button" class="btn btn-default navbar-btn">Random</button>
+		</div>  
 
         </div><!--/.nav-collapse -->
-
-		
       </div>
-
     </nav>
 
-    <div id="container class="container-fluid">
+    <div id="container" class="container-fluid">
 	  <div id="toprow" class="row">
-		<div id="info" class="col-md-8">info</div>
-		<div id="map" clss="col-md-4"></div>
+		<div id="info" class="col-md-8">
+				<h1>Welcome to the GBIF Soundscape.</h1>
+				<p>This is an entry in the <a href="http://gbif.challengepost.com/">2015 Ebbe Nielsen Challenge</a> by Ben Raynor and Peter Neish.</p>
+				<p>Here you can listen to sounds sourced from GBIF records. Read more about this project <a href="">here</a>.</p>
+				<p class="lead">To get started, please choose a locality from the map or the drop-down list above.</p>
+		</div>
+		<div id="map" class="col-md-4"></div>
 	  </div>
 	  <div class="row">
-      <div id="sounds" class="col-md-12">sounds</div>
+		  <div id="sounds" class="col-md-12" class="hide">
+			<div id="birds">
+				<h1>Birds</h1>
+				<div class="controls">
+				</div>
+			</div>	
+			<div id="frogs">
+			<h1>Frogs</h1>
+				<div class="controls">
+				</div>
+			</div>	
+		  </div>
 	  </div>
     </div><!-- /.container -->
+	
+	<!-- the template for the soundControls -->
+	<script id="taxon-template" type="text/x-handlebars-template">
+	  <div class="col-md-2 col-xs-4 item">
+		<div class="thumbnail">	
+			{{#if src}}
+				<img class="img-rounded" src="{{src}}" alt="{{name}}">
+			{{else}}
+				<p class="text-center"><span class="glyphicon glyphicon-lg glyphicon-remove"></span></p>
+			{{/if}}
+				<div class="caption">
+					<p class="clearfix">
+						{{name}}
+					
+						<button id="{{id}}" class="btn pull-right"><span class="glyphicon glyphicon-pause">&nbsp;</span></button>
+					</p>
+				</div>
+		</div>
+	  </div>
+	</script>
     
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/handlebars/handlebars.min.js"></script>
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
     <script src="bower_components/howler/howler.js"></script>
+	<script src="bower_components/isotope/dist/isotope.pkgd.js"></script>
+	<script src="bower_components/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

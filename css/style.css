@@ -12,8 +12,10 @@ body {
 	border: 1px solid #eee;
 }
 
+
+
 #map {
-	height: 240px;
+	height: 300px;
 }
 
 .clear {
@@ -26,4 +28,23 @@ body {
     
 }
 
+span.glyphicon-lg {
+		font-size:36px;
+}
+
+.bird{
+
+}
+
+.frog{
+
+}
+
+.selected {
+
+}
+
+.playing{
+
+}
 
