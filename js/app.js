@@ -40,7 +40,9 @@ $.getJSON('./data/sounds.json', function( data){
 			.on('click', markerClick)
 			.addTo(map);
 	  
-	  localityLayer.addLayer(rectangle); 
+	  localityLayer.addLayer(rectangle); 	  
+	  addMenuItem(key);
+	  
    }) 
    
    localityLayer.addTo(map);
@@ -49,21 +51,42 @@ $.getJSON('./data/sounds.json', function( data){
    
 
 });
+
+function addMenuItem(key){
+	$("#taxa_dropdown")
+	   .append('<li><a href="'+key+'">' + localities[key].locality + '</a></li>')
+	   .on('click', function(e){
+			select(this.attr('href'));
+			e.preventDefault();
+		});
+		
+		$("#taxa_choose")
+	   .append('<option value='+key+'>' + localities[key].locality + '</option>')
+	   .on('click', function(e){			
+			console.log(e);
+			select(e.target.value);
+			
+		});
+		
+}
+
+function select(key){
+	locality = localities[key]; 
+	map.fitBounds(locality.bounds);
+	updateInfo(locality);
+	updateSounds(locality);
+}
   
 function markerClick(m){
 	//console.log(localities[m.target.options.key].locality);
 	if(m.hasOwnProperty('target') 
 		&& m.target.hasOwnProperty('options') 
 	    && m.target.options.hasOwnProperty('key')){
-			locality = localities[m.target.options.key]; 
-			map.fitBounds(locality.bounds);
-			updateInfo(locality);
-			updateSounds(locality);
-		}			
+			select[m.target.options.key]; 
+	}			
 }	
 
 function updateInfo(l){
-	console.log(l);
 	var bird_number = l.birds.length;
 	var frog_number = l.frogs.length;
 	$('#info').html(
@@ -74,6 +97,9 @@ function updateInfo(l){
 }
 
 function updateSounds(l){
+	
+	$("#sounds div.controls").find(".item").remove();
+	
 	
 	$.each(l.birds, function (i, bird){
 		$("#birds div.controls").append(makeSoundControl(bird));
@@ -95,7 +121,7 @@ function updateSounds(l){
 	$.each(sounds, function(i, s){
 
 		 $('button#'+ i ).on('click', function(){
-			if($(this).find('span').hasClass('glyphicon-pause')){
+			if($(this).find('span').hasClass('glyphicon-play')){
 				sounds[i].stop().play();
 			}
 			else{
@@ -108,12 +134,22 @@ function updateSounds(l){
 	});
 }
 
+function toggleLoop(){
+	$.each(sounds, function(i, s){
+		if(s.loop){
+			s.loop(false);
+		}
+		else{	s.loop(true);
+		}		
+	});
+}
+
 function makeSoundControl(t){
 	
 	// make a new sound
 	var sound = new Howl({
 		urls: [t.audio],
-		loop: false
+		loop: true
 	});
 	
 	soundID = sounds.push(sound) - 1; // save the actual index
@@ -125,3 +161,8 @@ function makeSoundControl(t){
 
 function updateTaxa(t){
 }
+
+//sets the button state
+$(".btn-group > .btn").click(function(){
+    $(this).addClass("active").siblings().removeClass("active");
+});
