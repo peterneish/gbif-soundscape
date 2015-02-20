@@ -78,11 +78,11 @@ function select(key){
 }
   
 function markerClick(m){
-	//console.log(localities[m.target.options.key].locality);
+	console.log(localities[m.target.options.key].locality);
 	if(m.hasOwnProperty('target') 
 		&& m.target.hasOwnProperty('options') 
 	    && m.target.options.hasOwnProperty('key')){
-			select[m.target.options.key]; 
+			select(m.target.options.key); 
 	}			
 }	
 
