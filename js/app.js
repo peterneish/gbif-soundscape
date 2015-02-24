@@ -53,19 +53,12 @@ $.getJSON('./data/sounds.json', function( data){
 });
 
 function addMenuItem(key){
-	$("#taxa_dropdown")
-	   .append('<li><a href="'+key+'">' + localities[key].locality + '</a></li>')
-	   .on('click', function(e){
-			select(this.attr('href'));
-			e.preventDefault();
-		});
 		
-		$("#taxa_choose")
+		$("#area_choose")
 	   .append('<option value='+key+'>' + localities[key].locality + '</option>')
 	   .on('click', function(e){			
-			console.log(e);
+			//console.log(e);
 			select(e.target.value);
-			
 		});
 		
 }
@@ -102,11 +95,11 @@ function updateSounds(l){
 	
 	
 	$.each(l.birds, function (i, bird){
-		$("#birds div.controls").append(makeSoundControl(bird));
+		$("#sounds div.controls").append(makeSoundControl("bird", bird));
 	});
 
 	$.each(l.frogs, function (i, frog){
-		$("#frogs div.controls").append(makeSoundControl(frog));
+		$("#sounds div.controls").append(makeSoundControl("frog", frog));
 	});
 
 	// layout using isotope
@@ -144,7 +137,7 @@ function toggleLoop(){
 	});
 }
 
-function makeSoundControl(t){
+function makeSoundControl(tax, t){
 	
 	// make a new sound
 	var sound = new Howl({
@@ -154,7 +147,7 @@ function makeSoundControl(t){
 	
 	soundID = sounds.push(sound) - 1; // save the actual index
 		
-	var context = {src: t.image, name: t.name, id: soundID }; 
+	var context = {src: t.image, name: t.name, id: soundID, taxon: tax }; 
 	
 	return template(context);
 }

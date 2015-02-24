@@ -33,11 +33,11 @@ span.glyphicon-lg {
 }
 
 .bird{
-
+    background-color: #C38E98;
 }
 
 .frog{
-
+ background-color: #8AA39D;
 }
 
 .selected {
@@ -46,5 +46,23 @@ span.glyphicon-lg {
 
 .playing{
 
+}
+
+.icon-bird {
+    background-image: url("../images/bird.png");
+    background-position: center center;
+	height: 14px;
+    line-height: 14px;
+    width: 14px;
+	
+}
+
+.icon-frog {
+    background-image: url("http://cdn5.iconfinder.com/data/icons/Symbolicons_Transportation/24/Car.png");
+    background-position: center center;
+}
+
+#playcontrols, #taxachoose {
+	margin-left: 30px;
 }
 

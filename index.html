@@ -34,18 +34,24 @@
 				<li><a href="#about">About</a></li>
 				<li><a href="#contact">Contact</a></li>
 			</ul>
-			<div class="btn-group" role="group" aria-label="...">
-			  <button type="button" class="btn btn-default navbar-btn active">Show All</button>
-			  <button type="button" class="btn btn-default navbar-btn">Birds Only</button>
-			  <button type="button" class="btn btn-default navbar-btn">Frogs Only</button>
-			</div>  
-			
-			<form class="nav navbar-form navbar-right">
-			<select id="taxa_choose" class="form-control">
-				<option value="one">Choose an area</option>
-			</select>
-			</form>
-			
+			<div class="btn-toolbar" role="toolbar" aria-label="...">
+				<div id="taxachoose" class="btn-group" role="group" aria-label="...">
+					<button type="button" class="btn btn-primary navbar-btn active"><span class="icon-bird"></span>Play All</button>	
+					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play birds</button>		
+					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play frogs</button>	
+					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play random!</button>	
+				</div>  
+				
+				<div id="playcontrols" class="btn-group" role="group" aria-label="...">
+				  <button type="button" class="btn btn-warning navbar-btn active"><span class="glyphicon glyphicon-pause"></span>Pause</button>			 	  
+				</div>  
+					
+			<form class="navbar-form navbar-right">
+				<select id="area_choose" class="form-control">
+					<option value="one">Choose an area</option>
+				</select>
+			</form>	
+			</div>	
 		</div>
 
         </div><!--/.nav-collapse -->
@@ -64,23 +70,15 @@
 	  </div>
 	  <div class="row">
 		  <div id="sounds" class="col-md-12">
-			<div id="birds">
-				<h1>Birds</h1>
 				<div class="controls">
 				</div>
-			</div>	
-			<div id="frogs">
-			<h1>Frogs</h1>
-				<div class="controls">
-				</div>
-			</div>	
 		  </div>
 	  </div>
     </div><!-- /.container -->
 	
 	<!-- the template for the soundControls -->
 	<script id="taxon-template" type="text/x-handlebars-template">
-	  <div class="col-md-2 col-xs-4 item">
+	  <div class="col-md-1 col-xs-3 item {{taxon}}">
 		<div class="thumbnail">	
 			{{#if src}}
 				<img class="img-rounded" src="{{src}}" alt="{{name}}">
