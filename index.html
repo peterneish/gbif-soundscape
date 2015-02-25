@@ -34,26 +34,25 @@
 				<li><a href="http://untan.gl/gbif/sounds.html">About</a></li>
 			</ul>
 			<div class="btn-toolbar" role="toolbar" aria-label="...">
+				<!--
 				<div id="taxachoose" class="btn-group" role="group" aria-label="...">
 					<button type="button" class="btn btn-primary navbar-btn active"><span class="icon-bird"></span>Play All</button>	
 					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play birds</button>		
 					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play frogs</button>	
 					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play random!</button>	
-				</div>  
+				</div> 
 				
 				<div id="playcontrols" class="btn-group" role="group" aria-label="...">
-				  <button type="button" class="btn btn-warning navbar-btn active"><span class="glyphicon glyphicon-pause"></span>Pause</button>			 	  
+				  <button type="button" class="btn btn-warning navbar-btn disabled"><span class="glyphicon glyphicon-play"></span>Play</button>			 	  
 				</div>  
-					
+				--> 	
 			<form class="navbar-form navbar-right">
 				<select id="area_choose" class="form-control">
 					<option value="one">Choose an area</option>
 				</select>
 			</form>	
 			</div>	
-		</div>
-
-        </div><!--/.nav-collapse -->
+		</div><!--/.nav-collapse -->
       </div>
     </nav>
 
@@ -92,6 +91,24 @@
 					</p>
 				</div>
 		</div>
+	  </div>
+	</script>
+	<!-- and one for the infoBox -->
+	<script id="info-template" type="text/x-handlebars-template">
+	  <div class="infobox">
+		<h1>{{title}}</h1>
+
+				<div id="taxachoose" class="btn-group" role="group" aria-label="...">
+					<button type="button" class="btn btn-primary navbar-btn active"><span class="icon-bird"></span>Play All <span class="badge">{{allnum}}</span></button>	
+					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play birds <span class="badge">{{birdnum}}</span></button>		
+					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play frogs <span class="badge">{{frognum}}</span></button>	
+					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play random!</button>	
+				</div> 
+				
+				<div id="playcontrols" class="btn-group" role="group" aria-label="...">
+				  <button type="button" class="btn btn-warning navbar-btn disabled"><span class="glyphicon glyphicon-play"></span>Play</button>			 	  
+				</div>  
+		
 	  </div>
 	</script>
     

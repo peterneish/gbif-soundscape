@@ -20,7 +20,9 @@ customMarker = L.Marker.extend({
 });	
 
 // set up the template for the soundControl
-var template = Handlebars.compile($("#taxon-template").html());
+var taxon_template = Handlebars.compile($("#taxon-template").html());
+var info_template  = Handlebars.compile($("#info-template").html());
+
 
 
 
@@ -87,6 +89,11 @@ function updateInfo(l){
 		+ '<p>Bird audio files: ' + bird_number + '</p>'
 		+ '<p>Frog audio files: ' + frog_number + '</p>'
 	);
+	
+	$('#info').html(info_template({title: l.locality, 
+								   birdnum: bird_number,
+								   frognum: frog_number,
+								   allnum: bird_number + frog_number}));
 }
 
 function updateSounds(l){
@@ -149,7 +156,7 @@ function makeSoundControl(tax, t){
 		
 	var context = {src: t.image, name: t.name, id: soundID, taxon: tax }; 
 	
-	return template(context);
+	return taxon_template(context);
 }
 
 function updateTaxa(t){
