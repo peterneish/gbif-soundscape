@@ -45,7 +45,7 @@ span.glyphicon-lg {
 }
 
 .playing{
-
+	background-color: #0769AD;
 }
 
 .icon-bird {
@@ -65,4 +65,9 @@ span.glyphicon-lg {
 #playcontrols, #taxachoose {
 	margin-left: 30px;
 }
+
+audio { width: 140px; display: block; margin-top:20px; }
+
+
+
 

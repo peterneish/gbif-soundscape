@@ -67,9 +67,11 @@ function addMenuItem(key){
 
 function select(key){
 	locality = localities[key]; 
-	map.fitBounds(locality.bounds);
-	updateInfo(locality);
-	updateSounds(locality);
+	if(locality){
+		map.fitBounds(locality.bounds);
+		updateSounds(locality);
+		updateInfo(locality);
+	}
 }
   
 function markerClick(m){
@@ -94,6 +96,86 @@ function updateInfo(l){
 								   birdnum: bird_number,
 								   frognum: frog_number,
 								   allnum: bird_number + frog_number}));
+								   
+	// bind events
+	$(".btn .play").on('click', function(e){
+		$(this).addClass("active").siblings().removeClass("active");
+		
+	});
+	
+	$("#playbirds").on('click', function(e){
+		play("bird");		
+	});
+	
+	$("#playfrogs").on('click', function(e){
+		play("frog");		
+	});
+	
+	$("#playall").on('click', function(e){
+		play("item");		
+	});
+	
+	$("#playrandom").on('click', function(e){
+		$('audio').each(function(a){
+			if(Math.random() < 0.5){
+				this.play();
+			}
+			else{
+				this.pause();
+			}
+			$(this).parents('.item').toggleClass("playing");
+		});		
+	});
+	
+	$("#playpause").on('click', function(){
+		playPause();
+	});	
+	
+	// and this is to handle manual changes to the native audio controls
+	$('audio').on('click', function(){
+		if(this.paused == false){
+			$(this).parents('.item').addClass('paused');
+			$(this).parents('.item').removeClass('playing');
+		}
+		else{
+			$(this).parents('.item').addClass('playing');
+			$(this).parents('.item').removeClass('paused');
+		}
+	});
+}
+
+function pauseAll(){
+	$('audio').each(function(){
+		this.pause();
+		$(this).parents('.item').addClass('paused');
+		$(this).parents('.item').removeClass('playing');
+	});		
+}
+
+function playPause(){
+	$('.item').each(function(){
+		if($(this).hasClass('playing')){
+			$(this).removeClass('playing');
+			$(this).addClass('paused');
+			$(this).children('audio').pause();
+		}
+		else if($(this).hasClass('paused')){
+			$(this).removeClass('paused');
+			$(this).addClass('playing');
+			$(this).children('audio').play();	
+		}
+	});
+}
+
+function play(what){
+	
+	$('.'+what + ' audio').each(function(){
+			this.play();
+			$(this).parents('div.item').toggleClass('playing');
+			console.log(this);
+			console.log($(this).parents('div.item'));
+	});		
+	
 }
 
 function updateSounds(l){
@@ -108,6 +190,10 @@ function updateSounds(l){
 	$.each(l.frogs, function (i, frog){
 		$("#sounds div.controls").append(makeSoundControl("frog", frog));
 	});
+	
+	//$('audio').mediaelementplayer({features: ['playpause', 'volume'], audioWidth: 175, loop: true});
+	
+	//$('.mejs-container').attr('style', 'height: 30px, width: 100%');
 
 	// layout using isotope
 	$('div.controls').imagesLoaded( function(){
@@ -116,53 +202,11 @@ function updateSounds(l){
 				layoutMode: 'masonry'				
 		});
 	});
-	
-	// now bind the sound events
-	$.each(sounds, function(i, s){
-
-		 $('button#'+ i ).on('click', function(){
-			if($(this).find('span').hasClass('glyphicon-play')){
-				sounds[i].stop().play();
-			}
-			else{
-				sounds[i].stop();
-			}	
-			
-			$(this).find('span').toggleClass('glyphicon-pause glyphicon-play');
-		 });
-		 
-	});
-}
-
-function toggleLoop(){
-	$.each(sounds, function(i, s){
-		if(s.loop){
-			s.loop(false);
-		}
-		else{	s.loop(true);
-		}		
-	});
 }
 
 function makeSoundControl(tax, t){
 	
-	// make a new sound
-	var sound = new Howl({
-		urls: [t.audio],
-		loop: true
-	});
-	
-	soundID = sounds.push(sound) - 1; // save the actual index
-		
-	var context = {src: t.image, name: t.name, id: soundID, taxon: tax }; 
+	var context = {image_src: t.image, name: t.name, vernacular: t.vernacularName, taxon: tax, audio_src: t.audio, audio_credit: "test", image_credit: "test"}; 
 	
 	return taxon_template(context);
 }
-
-function updateTaxa(t){
-}
-
-//sets the button state
-$(".btn-group > .btn").click(function(){
-    $(this).addClass("active").siblings().removeClass("active");
-});
