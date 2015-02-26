@@ -80,7 +80,9 @@
 						<source src="{{audio_src}}" type="audio/mpeg">
 						Sorry your browser does not support this audio format
 						</audio>
-						<small>Source: <a href="{{image_credit}}">image</a> <a href="{{audio_credit}}">audio</a>
+						<small>Source: 
+							{{#if image_credit}} <a href="{{image_credit}}">image</a>{{/if}} 
+							{{#if audio_credit}}<a href="{{audio_credit}}">audio</a>{{/if}}
 						</small>
 					</p>
 				</div>
