@@ -100,7 +100,6 @@ function updateInfo(l){
 	// bind events
 	$(".btn .play").on('click', function(e){
 		$(this).addClass("active").siblings().removeClass("active");
-		
 	});
 	
 	$("#playbirds").on('click', function(e){
@@ -116,6 +115,7 @@ function updateInfo(l){
 	});
 	
 	$("#playrandom").on('click', function(e){
+		pauseAll();
 		$('audio').each(function(a){
 			if(Math.random() < 0.5){
 				this.play();
@@ -144,30 +144,38 @@ function updateInfo(l){
 	});
 }
 
+function playOne(i){
+	$(i).find('audio')[0].play();
+	$(i).find('audio').removeClass('paused');
+	$(i).find('audio').addClass('playing');
+}
+
+function pauseOne(i){
+	$(i).find('audio')[0].pause();
+	$(i).find('audio').removeClass('playing');
+	$(i).find('audio').addClass('paused');
+}
+
 function pauseAll(){
-	$('audio').each(function(){
-		this.pause();
-		$(this).parents('.item').addClass('paused');
-		$(this).parents('.item').removeClass('playing');
+	$('.item').each(function(){
+		pauseOne(this);
 	});		
 }
 
 function playPause(){
 	$('.item').each(function(){
 		if($(this).hasClass('playing')){
-			$(this).removeClass('playing');
-			$(this).addClass('paused');
-			$(this).children('audio').pause();
+				pauseOne(this);
 		}
 		else if($(this).hasClass('paused')){
-			$(this).removeClass('paused');
-			$(this).addClass('playing');
-			$(this).children('audio').play();	
+			playOne(this);
 		}
 	});
 }
 
 function play(what){
+	
+	pauseAll();
 	
 	$('.'+what + ' audio').each(function(){
 			this.play();
@@ -175,7 +183,6 @@ function play(what){
 			console.log(this);
 			console.log($(this).parents('div.item'));
 	});		
-	
 }
 
 function updateSounds(l){
