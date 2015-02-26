@@ -3,6 +3,8 @@ var active_locality = {};
 var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
+var $iso;
+
 
 
 map = new L.Map('map');
@@ -59,7 +61,7 @@ function addMenuItem(key){
 		$("#area_choose")
 	   .append('<option value='+key+'>' + localities[key].locality + '</option>')
 	   .on('click', function(e){			
-			//console.log(e);
+
 			select(e.target.value);
 		});
 		
@@ -72,11 +74,16 @@ function select(key){
 		updateSounds(locality);
 		updateInfo(locality);
 		map.fitBounds(locality.bounds);
+		
+		// and play some sounds
+		
+		play('item');
+		
+		
 	}
 }
   
 function markerClick(m){
-	console.log(localities[m.target.options.key].locality);
 	if(m.hasOwnProperty('target') 
 		&& m.target.hasOwnProperty('options') 
 	    && m.target.options.hasOwnProperty('key')){
@@ -101,12 +108,7 @@ function updateInfo(l){
 	// bind events
 	$(".btn .play").on('click', function(e){
 		$(this).addClass("active").siblings().removeClass("active");
-		$('div.controls').isotope({
-				itemSelector: '.item',
-				layoutMode: 'masonry',
-				filter: '.playing'
-		});
-		
+			
 	});
 	
 	$("#playbirds").on('click', function(e){
@@ -132,6 +134,7 @@ function updateInfo(l){
 				$(this).removeClass("playing");
 			}
 		});		
+		$iso.isotope({ filter: '.playing' });
 	});
 	
 	$("#playpause").on('click', function(){
@@ -185,9 +188,9 @@ function play(what){
 	$('.'+what + ' audio').each(function(){
 			this.play();
 			$(this).parents('div.item').toggleClass('playing');
-			console.log(this);
-			console.log($(this).parents('div.item'));
-	});		
+	});	
+	
+	$iso.isotope({ filter: '.playing' });		
 }
 
 function updateSounds(l){
@@ -202,18 +205,11 @@ function updateSounds(l){
 	$.each(l.frogs, function (i, frog){
 		$("#sounds div.controls").append(makeSoundControl("frog", frog));
 	});
-	
-	//$('audio').mediaelementplayer({features: ['playpause', 'volume'], audioWidth: 175, loop: true});
-	
-	//$('.mejs-container').attr('style', 'height: 30px, width: 100%');
 
-	// layout using isotope
-	//$('div.controls').imagesLoaded( function(){
-		$('div.controls').isotope({
-				itemSelector: '.item',
-				layoutMode: 'masonry'				
-		});
-	//});
+	$iso = $('div.controls').isotope({
+			itemSelector: '.item'			
+	});
+
 }
 
 function makeSoundControl(tax, t){
