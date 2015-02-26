@@ -202,7 +202,7 @@ function updateSounds(l){
 	
 	// and propate styling if user clicks directly on the control
 	$('audio').on('click', function(){
-		$(this).parents('.item').toggleClass('playing');
+		$(this).parents('.item').get(0).toggleClass('playing');
 	});	
 
 }
