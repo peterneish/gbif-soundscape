@@ -64,7 +64,7 @@
 	
 	<!-- the template for the soundControls -->
 	<script id="taxon-template" type="text/x-handlebars-template">
-	  <div class="col-md-2 col-xs-4 item {{taxon}}">
+	  <div class="col-md-2 col-sm-4 col-xs-12 item {{taxon}}">
 		<div class="thumbnail">	
 			{{#if image_src}}
 				<img class="img-rounded" src="{{image_src}}" alt="{{name}}">
@@ -80,6 +80,8 @@
 						<source src="{{audio_src}}" type="audio/mpeg">
 						Sorry your browser does not support this audio format
 						</audio>
+						<small>Source: <a href="{{image_credit}}">image</a> <a href="{{audio_credit}}">audio</a>
+						</small>
 					</p>
 				</div>
 		</div>

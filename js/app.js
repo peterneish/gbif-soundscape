@@ -25,9 +25,7 @@ customMarker = L.Marker.extend({
 var taxon_template = Handlebars.compile($("#taxon-template").html());
 var info_template  = Handlebars.compile($("#info-template").html());
 
-
-
-
+// load sound locality sound files
 $.getJSON('./data/sounds.json', function( data){
        
    $.each( data, function(key, val){
@@ -76,10 +74,7 @@ function select(key){
 		map.fitBounds(locality.bounds);
 		
 		// and play some sounds
-		
 		play('item');
-		
-		
 	}
 }
   
@@ -94,11 +89,6 @@ function markerClick(m){
 function updateInfo(l){
 	var bird_number = l.birds.length;
 	var frog_number = l.frogs.length;
-	$('#info').html(
-		"<h1>" + l.locality + "</h1>"
-		+ '<p>Bird audio files: ' + bird_number + '</p>'
-		+ '<p>Frog audio files: ' + frog_number + '</p>'
-	);
 	
 	$('#info').html(info_template({title: l.locality, 
 								   birdnum: bird_number,
@@ -107,8 +97,7 @@ function updateInfo(l){
 								   
 	// bind events
 	$(".btn .play").on('click', function(e){
-		$(this).addClass("active").siblings().removeClass("active");
-			
+		$(this).addClass("active").siblings().removeClass("active");	
 	});
 	
 	$("#playbirds").on('click', function(e){
@@ -215,7 +204,7 @@ function updateSounds(l){
 
 function makeSoundControl(tax, t){
 	
-	var context = {image_src: t.image, name: t.name, vernacular: t.vernacularName, taxon: tax, audio_src: t.audio, audio_credit: "test", image_credit: "test"}; 
+	var context = {image_src: t.image, name: t.name, vernacular: t.vernacularName, taxon: tax, audio_src: t.audio, audio_credit: t.audio_reference, image_credit: t.image_reference}; 
 	
 	return taxon_template(context);
 }

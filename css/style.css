@@ -36,6 +36,12 @@ span.glyphicon-lg {
 	height: 350px;
 }
 
+.item .thumbnail {
+	max-height: 340px;
+}	
+
+
+
 .item img {
 	max-height: 200px;
 }
