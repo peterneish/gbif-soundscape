@@ -8,9 +8,9 @@ body {
 	padding-top:50px;
 }
 
-#info, #map, #sounds{
-	border: 1px solid #eee;
-}
+#sounds {
+	margin-top: 10px;
+}	
 
 
 
@@ -32,35 +32,30 @@ span.glyphicon-lg {
 		font-size:36px;
 }
 
-.bird{
-    background-color: #C38E98;
+.item {
+	height: 350px;
 }
 
-.frog{
- background-color: #8AA39D;
+.item img {
+	max-height: 200px;
+}
+
+.bird .thumbnail{
+    background-color: #F0AD4E;
+}
+
+.frog .thumbnail {
+ background-color: #5CB85C;
 }
 
 .selected {
 
 }
 
-.playing{
-	background-color: #0769AD;
+.playing  .thumbnail {
+	border: 3px solid #444;
 }
 
-.icon-bird {
-    background-image: url("../images/bird.png");
-    background-position: center center;
-	height: 14px;
-    line-height: 14px;
-    width: 14px;
-	
-}
-
-.icon-frog {
-    background-image: url("http://cdn5.iconfinder.com/data/icons/Symbolicons_Transportation/24/Car.png");
-    background-position: center center;
-}
 
 #playcontrols, #taxachoose {
 	margin-left: 30px;

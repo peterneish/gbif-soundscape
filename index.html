@@ -87,7 +87,7 @@
 				<div class="caption">
 					<p class="clearfix">
 						<h4>{{vernacular}}</h4>
-						<h5>{{name}}</h5>
+						<h5><em>{{name}}</em></h5>
 					
 						<!--<button id="{{id}}" class="btn pull-right"><span class="glyphicon glyphicon-play">&nbsp;</span></button>-->
 						<audio controls loop>
@@ -106,13 +106,13 @@
 
 				
 					<button id="playall" type="button" class="play btn btn-primary">Play All <span class="badge">{{allnum}}</span></button>	
-					<button id="playbirds" type="button" class="play btn btn-primary" {{#unless birdnum}}disabled{{/unless}}><span class="icon-bird"></span>Play birds <span class="badge">{{birdnum}}</span></button>		
-					<button id="playfrogs" type="button" class="play btn btn-primary" {{#unless frognum}}disabled{{/unless}}><span class="icon-bird"></span>Play frogs <span class="badge">{{frognum}}</span></button>	
+					<button id="playbirds" type="button" class="play btn btn-warning" {{#unless birdnum}}disabled{{/unless}}><span class="icon-bird"></span>Play birds <span class="badge">{{birdnum}}</span></button>		
+					<button id="playfrogs" type="button" class="play btn btn-success" {{#unless frognum}}disabled{{/unless}}><span class="icon-bird"></span>Play frogs <span class="badge">{{frognum}}</span></button>	
 					<button id="playrandom" type="button" class="play btn btn-primary "><span class="icon-bird"></span>Play random!</button>	
 				 
 				
 				<div id="playcontrols" class="btn-group" role="group" aria-label="...">
-				  <button id="playpause" type="button" class="btn btn-warning navbar-btn"><span class="glyphicon glyphicon-pause"></span>Pause</button>			 	  
+				  <button id="playpause" type="button" class="btn btn-danger navbar-btn"><span class="glyphicon glyphicon-pause"></span>Pause</button>			 	  
 				</div>  
 		
 	  </div>

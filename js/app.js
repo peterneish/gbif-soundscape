@@ -68,9 +68,10 @@ function addMenuItem(key){
 function select(key){
 	locality = localities[key]; 
 	if(locality){
-		map.fitBounds(locality.bounds);
+		$('#map').css('height', 250);
 		updateSounds(locality);
 		updateInfo(locality);
+		map.fitBounds(locality.bounds);
 	}
 }
   
@@ -100,6 +101,12 @@ function updateInfo(l){
 	// bind events
 	$(".btn .play").on('click', function(e){
 		$(this).addClass("active").siblings().removeClass("active");
+		$('div.controls').isotope({
+				itemSelector: '.item',
+				layoutMode: 'masonry',
+				filter: '.playing'
+		});
+		
 	});
 	
 	$("#playbirds").on('click', function(e){
@@ -115,20 +122,20 @@ function updateInfo(l){
 	});
 	
 	$("#playrandom").on('click', function(e){
-		pauseAll();
-		$('audio').each(function(a){
+		$('.item').each(function(a){
 			if(Math.random() < 0.5){
-				this.play();
+				$(this).find('audio')[0].play();
+				$(this).addClass("playing");
 			}
 			else{
-				this.pause();
+				$(this).find('audio')[0].pause();
+				$(this).removeClass("playing");
 			}
-			$(this).parents('.item').toggleClass("playing");
 		});		
 	});
 	
 	$("#playpause").on('click', function(){
-		playPause();
+		pauseAll();
 	});	
 	
 	// and this is to handle manual changes to the native audio controls
@@ -146,19 +153,17 @@ function updateInfo(l){
 
 function playOne(i){
 	$(i).find('audio')[0].play();
-	$(i).find('audio').removeClass('paused');
-	$(i).find('audio').addClass('playing');
+
 }
 
 function pauseOne(i){
 	$(i).find('audio')[0].pause();
-	$(i).find('audio').removeClass('playing');
-	$(i).find('audio').addClass('paused');
 }
 
 function pauseAll(){
 	$('.item').each(function(){
 		pauseOne(this);
+		$(this).removeClass('playing');
 	});		
 }
 
@@ -203,12 +208,12 @@ function updateSounds(l){
 	//$('.mejs-container').attr('style', 'height: 30px, width: 100%');
 
 	// layout using isotope
-	$('div.controls').imagesLoaded( function(){
+	//$('div.controls').imagesLoaded( function(){
 		$('div.controls').isotope({
 				itemSelector: '.item',
 				layoutMode: 'masonry'				
 		});
-	});
+	//});
 }
 
 function makeSoundControl(tax, t){
