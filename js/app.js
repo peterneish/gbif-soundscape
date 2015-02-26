@@ -199,6 +199,11 @@ function updateSounds(l){
 	$iso = $('div.controls').isotope({
 			itemSelector: '.item'			
 	});
+	
+	// and propate styling if user clicks directly on the control
+	$('audio').on('click', function(){
+		$(this).toggleClass('playing');
+	});	
 
 }
 
