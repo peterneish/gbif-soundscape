@@ -195,6 +195,7 @@ function play(what){
 
 function updateSounds(l){
 	
+	// trash what's there
 	$("#sounds div.controls").find(".item").remove();
 	
 	

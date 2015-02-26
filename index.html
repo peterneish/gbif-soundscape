@@ -9,7 +9,6 @@
     <!-- Bootstrap -->
    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css">
-   <link rel="stylesheet" href="bower_components/mediaelement/build/mediaelementplayer.css">
    <link rel="stylesheet" href="css/style.css">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -35,18 +34,6 @@
 				<li><a href="http://untan.gl/gbif/sounds.html">About</a></li>
 			</ul>
 			<div class="btn-toolbar" role="toolbar" aria-label="...">
-				<!--
-				<div id="taxachoose" class="btn-group" role="group" aria-label="...">
-					<button type="button" class="btn btn-primary navbar-btn active"><span class="icon-bird"></span>Play All</button>	
-					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play birds</button>		
-					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play frogs</button>	
-					 <button type="button" class="btn btn-primary navbar-btn "><span class="icon-bird"></span>Play random!</button>	
-				</div> 
-				
-				<div id="playcontrols" class="btn-group" role="group" aria-label="...">
-				  <button type="button" class="btn btn-warning navbar-btn disabled"><span class="glyphicon glyphicon-play"></span>Play</button>			 	  
-				</div>  
-				--> 	
 			<form class="navbar-form navbar-right">
 				<select id="area_choose" class="form-control">
 					<option value="one">Choose an area</option>
@@ -89,7 +76,6 @@
 						<h4>{{vernacular}}</h4>
 						<h5><em>{{name}}</em></h5>
 					
-						<!--<button id="{{id}}" class="btn pull-right"><span class="glyphicon glyphicon-play">&nbsp;</span></button>-->
 						<audio controls loop>
 						<source src="{{audio_src}}" type="audio/mpeg">
 						Sorry your browser does not support this audio format
@@ -99,24 +85,24 @@
 		</div>
 	  </div>
 	</script>
+	
 	<!-- and one for the infoBox -->
 	<script id="info-template" type="text/x-handlebars-template">
 	  <div class="infobox">
 		<h1>{{title}}</h1>
 
 				
-					<button id="playall" type="button" class="play btn btn-primary">Play All <span class="badge">{{allnum}}</span></button>	
-					<button id="playbirds" type="button" class="play btn btn-warning" {{#unless birdnum}}disabled{{/unless}}><span class="icon-bird"></span>Play birds <span class="badge">{{birdnum}}</span></button>		
-					<button id="playfrogs" type="button" class="play btn btn-success" {{#unless frognum}}disabled{{/unless}}><span class="icon-bird"></span>Play frogs <span class="badge">{{frognum}}</span></button>	
-					<button id="playrandom" type="button" class="play btn btn-primary "><span class="icon-bird"></span>Play random!</button>	
+			<button id="playall" type="button" class="play btn btn-primary">Play All <span class="badge">{{allnum}}</span></button>	
+			<button id="playbirds" type="button" class="play btn btn-warning" {{#unless birdnum}}disabled{{/unless}}><span class="icon-bird"></span>Play birds <span class="badge">{{birdnum}}</span></button>		
+			<button id="playfrogs" type="button" class="play btn btn-success" {{#unless frognum}}disabled{{/unless}}><span class="icon-bird"></span>Play frogs <span class="badge">{{frognum}}</span></button>	
+			<button id="playrandom" type="button" class="play btn btn-primary "><span class="icon-bird"></span>Play random!</button>	
 				 
 				
-				<div id="playcontrols" class="btn-group" role="group" aria-label="...">
-				  <button id="playpause" type="button" class="btn btn-danger navbar-btn"><span class="glyphicon glyphicon-pause"></span>Pause</button>			 	  
-				</div>  
+			<div id="playcontrols" class="btn-group" role="group" aria-label="...">
+			  <button id="playpause" type="button" class="btn btn-danger navbar-btn"><span class="glyphicon glyphicon-pause"></span>Pause</button>			 	  
+			</div>  
 				
-				
-		
+
 	  </div>
 	</script>
     
@@ -124,10 +110,7 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/handlebars/handlebars.min.js"></script>
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
-    <script src="bower_components/howler/howler.js"></script>
 	<script src="bower_components/isotope/dist/isotope.pkgd.js"></script>
-	<script src="bower_components/imagesloaded/imagesloaded.pkgd.min.js"></script>
-	<script src="bower_components/mediaelement/build/mediaelement-and-player.min.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

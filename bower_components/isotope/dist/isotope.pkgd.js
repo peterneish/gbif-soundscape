@@ -1,5 +1,5 @@
 /*!
- * Isotope PACKAGED v2.1.0
+ * Isotope PACKAGED v2.1.1
  * Filter & sort magical layouts
  * http://isotope.metafizzy.co
  */
@@ -838,13 +838,13 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 /*!
- * getSize v1.2.0
+ * getSize v1.2.2
  * measure size of elements
  * MIT license
  */
 
 /*jshint browser: true, strict: true, undef: true, unused: true */
-/*global define: false, exports: false, require: false, module: false */
+/*global define: false, exports: false, require: false, module: false, console: false */
 
 ( function( window, undefined ) {
 
@@ -859,6 +859,8 @@ function getStyleSize( value ) {
   var isValid = value.indexOf('%') === -1 && !isNaN( num );
   return isValid && num;
 }
+
+function noop() {}
 
 var logError = typeof console === 'undefined' ? noop :
   function( message ) {
@@ -935,10 +937,10 @@ function setup() {
         if ( !style ) {
           logError( 'Style returned ' + style +
             '. Are you running this code in a hidden iframe on Firefox? ' +
-            'See http://bit.ly/getsizeiframe' );
+            'See http://bit.ly/getsizebug1' );
         }
         return style;
-      }
+      };
   })();
 
   // -------------------------- box sizing -------------------------- //
@@ -1043,7 +1045,7 @@ function getSize( elem ) {
 // taken from jQuery's curCSS
 function mungeNonPixel( elem, value ) {
   // IE8 and has percent value
-  if ( getComputedStyle || value.indexOf('%') === -1 ) {
+  if ( window.getComputedStyle || value.indexOf('%') === -1 ) {
     return value;
   }
   var style = elem.style;
@@ -3397,7 +3399,7 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 /*!
- * Isotope v2.1.0
+ * Isotope v2.1.1
  * Filter & sort magical layouts
  * http://isotope.metafizzy.co
  */
@@ -3575,7 +3577,23 @@ function isotopeDefinition( Outlayer, getSize, matchesSelector, Item, LayoutMode
     this.option( opts );
     this._getIsInstant();
     // filter, sort, and layout
-    this.filteredItems = this._filter( this.items );
+
+    // filter
+    var filtered = this._filter( this.items );
+    this.filteredItems = filtered.matches;
+
+    var _this = this;
+    function hideReveal() {
+      _this.reveal( filtered.needReveal );
+      _this.hide( filtered.needHide );
+    }
+
+    if ( this._isInstant ) {
+      this._noTransition( hideReveal );
+    } else {
+      hideReveal();
+    }
+
     this._sort();
     this._layout();
   };
@@ -3624,19 +3642,12 @@ function isotopeDefinition( Outlayer, getSize, matchesSelector, Item, LayoutMode
       }
     }
 
-    var _this = this;
-    function hideReveal() {
-      _this.reveal( hiddenMatched );
-      _this.hide( visibleUnmatched );
-    }
-
-    if ( this._isInstant ) {
-      this._noTransition( hideReveal );
-    } else {
-      hideReveal();
-    }
-
-    return matches;
+    // return collections of items to be manipulated
+    return {
+      matches: matches,
+      needReveal: hiddenMatched,
+      needHide: visibleUnmatched
+    };
   };
 
   // get a jQuery, function, or a matchesSelector test given the filter
@@ -3854,6 +3865,7 @@ function isotopeDefinition( Outlayer, getSize, matchesSelector, Item, LayoutMode
     if ( !items.length ) {
       return;
     }
+    // filter, layout, reveal new items
     var filteredItems = this._filterRevealAdded( items );
     // add to filteredItems
     this.filteredItems = this.filteredItems.concat( filteredItems );
@@ -3865,28 +3877,26 @@ function isotopeDefinition( Outlayer, getSize, matchesSelector, Item, LayoutMode
     if ( !items.length ) {
       return;
     }
-    // add items to beginning of collection
-    var previousItems = this.items.slice(0);
-    this.items = items.concat( previousItems );
     // start new layout
     this._resetLayout();
     this._manageStamps();
-    // layout new stuff without transition
+    // filter, layout, reveal new items
     var filteredItems = this._filterRevealAdded( items );
     // layout previous items
-    this.layoutItems( previousItems );
-    // add to filteredItems
+    this.layoutItems( this.filteredItems );
+    // add to items and filteredItems
     this.filteredItems = filteredItems.concat( this.filteredItems );
+    this.items = items.concat( this.items );
   };
 
   Isotope.prototype._filterRevealAdded = function( items ) {
-    var filteredItems = this._noTransition( function() {
-      return this._filter( items );
-    });
-    // layout and reveal just the new items
-    this.layoutItems( filteredItems, true );
-    this.reveal( filteredItems );
-    return items;
+    var filtered = this._filter( items );
+    this.hide( filtered.needHide );
+    // reveal all new items
+    this.reveal( filtered.matches );
+    // layout new items, no transition
+    this.layoutItems( filtered.matches, true );
+    return filtered.matches;
   };
 
   /**
@@ -3906,24 +3916,7 @@ function isotopeDefinition( Outlayer, getSize, matchesSelector, Item, LayoutMode
       this.element.appendChild( item.element );
     }
     // filter new stuff
-    /*
-    // this way adds hides new filtered items with NO transition
-    // so user can't see if new hidden items have been inserted
-    var filteredInsertItems;
-    this._noTransition( function() {
-      filteredInsertItems = this._filter( items );
-      // hide all new items
-      this.hide( filteredInsertItems );
-    });
-    // */
-    // this way hides new filtered items with transition
-    // so user at least sees that something has been added
-    var filteredInsertItems = this._filter( items );
-    // hide all newitems
-    this._noTransition( function() {
-      this.hide( filteredInsertItems );
-    });
-    // */
+    var filteredInsertItems = this._filter( items ).matches;
     // set flag
     for ( i=0; i < len; i++ ) {
       items[i].isLayoutInstant = true;
