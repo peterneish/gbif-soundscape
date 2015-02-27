@@ -4,6 +4,7 @@ var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
 var $iso;
+var limit;
 
 
 
