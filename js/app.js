@@ -187,14 +187,14 @@ function updateSounds(l){
 	// trash what's there
 	$("#sounds div.controls").find(".item").remove();
 	
+	$.each(l.frogs, function (i, frog){
+		$("#sounds div.controls").append(makeSoundControl("frog", frog));
+	});
 	
 	$.each(l.birds, function (i, bird){
 		$("#sounds div.controls").append(makeSoundControl("bird", bird));
 	});
 
-	$.each(l.frogs, function (i, frog){
-		$("#sounds div.controls").append(makeSoundControl("frog", frog));
-	});
 
 	$iso = $('div.controls').isotope({
 			itemSelector: '.item'			
