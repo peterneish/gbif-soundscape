@@ -4,7 +4,7 @@ var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
 var $iso;
-var limit;
+var limit = 20;
 
 
 
@@ -14,8 +14,9 @@ var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});		
 
-map.setView([0,0],1);
 map.addLayer(osm);
+map.setView([0,0],1);
+//map.addLayer(osm);
 
 // extend Marker so that we can track the locality id
 customMarker = L.Marker.extend({
@@ -41,6 +42,8 @@ $.getJSON('./data/sounds.json', function( data){
 	  var marker = new customMarker(centre, {key: key})
 			.bindPopup(val.locality)
 			.on('click', markerClick)
+			.on('mouseover', function(e){ e.target.openPopup(); } )
+			.on('mouseout', function(e) { e.target.closePopup(); })
 			.addTo(map);
 	  
 	  localityLayer.addLayer(rectangle); 	  
@@ -48,9 +51,11 @@ $.getJSON('./data/sounds.json', function( data){
 	  
    }) 
    
-   localityLayer.addTo(map);
    
    map.fitBounds(localityLayer.getBounds());
+
+  
+   localityLayer.addTo(map);
    
 
 });
@@ -67,6 +72,11 @@ function addMenuItem(key){
 }
 
 function select(key){
+
+	// wipe current
+	$('#info').children().remove();;
+	$('#sounds .controls').children().remove();
+		
 	locality = localities[key]; 
 	if(locality){
 		$('#map').css('height', 250);
@@ -189,11 +199,15 @@ function updateSounds(l){
 	$("#sounds div.controls").find(".item").remove();
 	
 	$.each(l.frogs, function (i, frog){
-		$("#sounds div.controls").append(makeSoundControl("frog", frog));
+		if(i < limit){ 
+			$("#sounds div.controls").append(makeSoundControl("frog", frog));
+		}
 	});
 	
 	$.each(l.birds, function (i, bird){
-		$("#sounds div.controls").append(makeSoundControl("bird", bird));
+		if(i < limit){
+			$("#sounds div.controls").append(makeSoundControl("bird", bird));
+		}
 	});
 
 
