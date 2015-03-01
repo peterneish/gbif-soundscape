@@ -4,9 +4,7 @@ var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
 var $iso;
-var limit = 20;
-
-
+var limit = 30;
 
 map = new L.Map('map');
 
@@ -16,7 +14,6 @@ var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});
 
 map.addLayer(osm);
 map.setView([0,0],1);
-//map.addLayer(osm);
 
 // extend Marker so that we can track the locality id
 customMarker = L.Marker.extend({
@@ -50,42 +47,43 @@ $.getJSON('./data/sounds.json', function( data){
 	  addMenuItem(key);
 	  
    }) 
-   
-   
-   map.fitBounds(localityLayer.getBounds());
 
-  
+   map.fitBounds(localityLayer.getBounds());  
    localityLayer.addTo(map);
-   
-
+ 
 });
 
 function addMenuItem(key){
 		
-		$("#area_choose")
-	   .append('<option value='+key+'>' + localities[key].locality + '</option>')
-	   .on('click', function(e){			
-
-			select(e.target.value);
+		option = $('<li><a href="#">' + localities[key].locality + '</a></li>').on('click',  function(e){			
+			select(key);
+			e.preventDefault();
 		});
+		
+		$('#area_choose').append(option);
+
+	  
 		
 }
 
 function select(key){
 
 	// wipe current
-	$('#info').children().remove();;
-	$('#sounds .controls').children().remove();
+	$('#controls').html('');
+	$iso = $("#controls");
+	$iso.isotope({ itemSelector: '.item'});
 		
 	locality = localities[key]; 
 	if(locality){
 		$('#map').css('height', 250);
+
 		updateSounds(locality);
 		updateInfo(locality);
 		map.fitBounds(locality.bounds);
 		
 		// and play some sounds
 		play('item');
+		
 	}
 }
   
@@ -98,8 +96,13 @@ function markerClick(m){
 }	
 
 function updateInfo(l){
+
 	var bird_number = l.birds.length;
+	if(bird_number > limit){ bird_number = limit; }
 	var frog_number = l.frogs.length;
+	if(frog_number > limit){ frog_number = limit; }
+	
+	$('#info').empty();
 	
 	$('#info').html(info_template({title: l.locality, 
 								   birdnum: bird_number,
@@ -108,7 +111,8 @@ function updateInfo(l){
 								   
 	// bind events
 	$(".btn .play").on('click', function(e){
-		$(this).addClass("active").siblings().removeClass("active");	
+		$iso.isotope({filter: '.playing'});
+		$(this).addClass("active").siblings().removeClass("active");
 	});
 	
 	$("#playbirds").on('click', function(e){
@@ -133,8 +137,10 @@ function updateInfo(l){
 				$(this).find('audio')[0].pause();
 				$(this).removeClass("playing");
 			}
-		});		
-		$iso.isotope({ filter: '.playing' });
+		});	
+	
+		$iso.isotope({filter: '.playing' });
+
 	});
 	
 	$("#playpause").on('click', function(){
@@ -185,40 +191,35 @@ function play(what){
 	
 	pauseAll();
 	
-	$('.'+what + ' audio').each(function(){
+	$('.'+ what + ' audio').each(function(){
 			this.play();
 			$(this).parents('div.item').toggleClass('playing');
 	});	
 	
-	$iso.isotope({ filter: '.playing' });		
+	$iso.isotope({filter: '.playing' });
+
 }
 
 function updateSounds(l){
-	
-	// trash what's there
-	$("#sounds div.controls").find(".item").remove();
-	
+
 	$.each(l.frogs, function (i, frog){
 		if(i < limit){ 
-			$("#sounds div.controls").append(makeSoundControl("frog", frog));
+			$("#controls").append(makeSoundControl("frog", frog));
 		}
 	});
 	
 	$.each(l.birds, function (i, bird){
 		if(i < limit){
-			$("#sounds div.controls").append(makeSoundControl("bird", bird));
+			$("#controls").append(makeSoundControl("bird", bird));
 		}
 	});
 
-
-	$iso = $('div.controls').isotope({
-			itemSelector: '.item'			
-	});
-	
-	// and propate styling if user clicks directly on the control
+	// and propagate styling if user clicks directly on the control
 	$('audio').on('click', function(){
 		$(this).parents('.item').get(0).toggleClass('playing');
 	});	
+	
+	$iso.isotope('reloadItems');
 
 }
 

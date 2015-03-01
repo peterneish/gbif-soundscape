@@ -30,18 +30,21 @@
           <a class="navbar-brand" href="">GBIF Soundscape</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-			  <ul class="nav navbar-nav">
+			
+			<ul class="nav navbar-nav">
 				<li><a href="http://untan.gl/gbif/sounds.html">About</a></li>
 			</ul>
-			<div class="btn-toolbar" role="toolbar" aria-label="...">
-			<form class="navbar-form navbar-right">
-				<select id="area_choose" class="form-control">
-					<option value="one">Choose an area</option>
-				</select>
-			</form>	
-			</div>	
-		</div><!--/.nav-collapse -->
-      </div>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Choose an area <span class="caret"></span></a>
+				<ul id="area_choose" class="dropdown-menu" role="menu">
+				</ul>
+</li>				
+			</ul>
+		
+		</div>	
+	  </div><!--/.nav-collapse -->
+     </div>
     </nav>
 
     <div id="container" class="container-fluid">
@@ -56,7 +59,7 @@
 	  </div>
 	  <div class="row">
 		  <div id="sounds" class="col-md-12">
-				<div class="controls">
+				<div id="controls">
 				</div>
 		  </div>
 	  </div>
