@@ -1,3 +1,5 @@
+var app = {}; // set up namespace for our app
+
 var localities = [];
 var active_locality = {};
 var map;
@@ -23,6 +25,28 @@ customMarker = L.Marker.extend({
 // set up the template for the soundControl
 var taxon_template = Handlebars.compile($("#taxon-template").html());
 var info_template  = Handlebars.compile($("#info-template").html());
+
+// backbone model(s)
+app.Critter = Backbone.Model.extend({
+});
+
+app.Critters = Backbone.Collection.extend({
+	model: app.Critter,
+	parse: function(data){
+		return data.birds;
+	}
+});
+
+app.critters = new app.Critters();
+
+app.critters.fetch({ url: './data/sounds.json'}).complete(function(){
+	console.log(app.Critters);
+});
+
+
+
+
+
 
 // load sound locality sound files
 $.getJSON('./data/sounds.json', function( data){
