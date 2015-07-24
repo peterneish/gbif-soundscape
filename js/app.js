@@ -27,30 +27,52 @@ var taxon_template = Handlebars.compile($("#taxon-template").html());
 var info_template  = Handlebars.compile($("#info-template").html());
 
 // backbone model(s)
-app.Critter = Backbone.Model.extend({
+app.Critter = Backbone.Model.extend({});
+app.Critters = Backbone.Collection.extend({
+	model: app.Critter
 });
 
-app.Critters = Backbone.Collection.extend({
-	model: app.Critter,
-	parse: function(data){
-		return data.birds;
-	}
+app.Locality = Backbone.Model.extend({});
+app.Localities = Backbone.Collection.extend({
+	model: app.Locality
 });
 
 app.critters = new app.Critters();
-
-app.critters.fetch({ url: './data/sounds.json'}).complete(function(){
-	console.log(app.Critters);
-});
-
-
-
-
+app.localities = new app.Localities();
 
 
 // load sound locality sound files
 $.getJSON('./data/sounds.json', function( data){
-       
+	
+	// parsing from [ locality [birds], [frogs] ] to [localities] and [critters]
+   $.each( data, function(key, val){
+	   var loc = new app.Locality({"lat": val.lat, 
+								   "lon": val.lon, 
+								   "bounds": [[val.lat[0], val.lon[0]],[val.lat[1], val.lon[1]]],
+								   "id":key, 
+								   "name": val.locality});
+	   app.localities.push(loc);
+	   
+	   // put make birds into critters
+	   $.each(val.birds, function(bkey, bval){
+		   var crit = new app.Critter(bval);
+		   crit.set({"locality_id": key,
+					 "locality"   : val.locality,
+					 "type"       : "bird"});
+		   app.critters.push(crit);			
+	   }); 
+	   // put make frogs into critters
+	   $.each(val.frogs, function(bkey, bval){
+		   var crit = new app.Critter(bval);
+		   crit.set({"locality_id": key,
+					 "locality"   : val.locality,
+					 "type"       : "frog"});
+		   app.critters.push(crit);			
+	   }); 
+   });
+
+   console.log(app.localities);
+	
    $.each( data, function(key, val){
       localities[key] = val;
 	  //add to layer
