@@ -40,6 +40,18 @@ app.Localities = Backbone.Collection.extend({
 app.critters = new app.Critters();
 app.localities = new app.Localities();
 
+var LMap = Backbone.View.extend({
+	model: app.localities,
+	initialize: function(){
+		this.render();
+	},
+	render: function(){
+		this.$el.html("hello there");
+	}
+});
+
+var lmap = new LMap({el: $('#mapb')});
+
 
 // load sound locality sound files
 $.getJSON('./data/sounds.json', function( data){
@@ -71,7 +83,9 @@ $.getJSON('./data/sounds.json', function( data){
 	   }); 
    });
 
-   console.log(app.localities);
+
+
+   //console.log(app.localities);
 	
    $.each( data, function(key, val){
       localities[key] = val;
