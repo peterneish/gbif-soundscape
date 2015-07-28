@@ -40,7 +40,7 @@ app.Localities = Backbone.Collection.extend({
 app.critters = new app.Critters();
 app.localities = new app.Localities();
 
-var LMap = Backbone.View.extend({
+app.LMap = Backbone.View.extend({
 	model: app.localities,
 	initialize: function(){
 		this.render();
@@ -50,7 +50,14 @@ var LMap = Backbone.View.extend({
 	}
 });
 
-var lmap = new LMap({el: $('#mapb')});
+app.lmap = new app.LMap({el: $('#mapb')});
+
+app.CritterView = Backbone.View.extend({
+	model: app.critters,
+	template: '',
+	initalialize: function(){
+
+	}
 
 
 // load sound locality sound files
