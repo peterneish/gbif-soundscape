@@ -52,13 +52,25 @@ app.LMap = Backbone.View.extend({
 
 app.lmap = new app.LMap({el: $('#mapb')});
 
+// view for a single critter
 app.CritterView = Backbone.View.extend({
-	model: app.critters,
-	template: '',
-	initalialize: function(){
+ el: '#critterlist',
+     
+    initialize:function(){
+        //this.render();
+    },
+    render: function () {
+        var template = _.template($('#critterlist-template').html());
+        var html = template({critters: app.critters.models});
+        this.$el.html(html);
+    }
+});
 
-	}
+app.critterView = new app.CritterView();
 
+app.MenuView = Backbone.View.extend({
+
+});
 
 // load sound locality sound files
 $.getJSON('./data/sounds.json', function( data){
@@ -89,6 +101,8 @@ $.getJSON('./data/sounds.json', function( data){
 		   app.critters.push(crit);			
 	   }); 
    });
+   
+   app.critterView.render();
 
 
 

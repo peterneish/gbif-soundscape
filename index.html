@@ -64,6 +64,7 @@
 		  </div>
 	  </div>
       <div id="mapb" class="col-md-12"></div>
+      <div id="critterlist"></div>
     </div><!-- /.container -->
 	
 	<!-- the template for the soundControls -->
@@ -117,8 +118,14 @@
 	</script>
     
 <!-- testing underscore template -->
-<script id="critter-template" type="text/template">
-	<p><%= name %></p>
+<script id="critterlist-template" type="text/template">
+    <% _.each(critters, function(critter) { %>
+      <div>
+        <h3> <%= critter.get('name') %>  </h3>
+        <p>  <%= critter.get('vernacularName') %>   </p>
+        <p>  <%= critter.get('audio') %>   </p>
+      </div>
+    <% }); %>
 </script>
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
