@@ -120,13 +120,42 @@
 <!-- testing underscore template -->
 <script id="critterlist-template" type="text/template">
     <% _.each(critters, function(critter) { %>
-      <div>
+      <div class=="critter" >
         <h3> <%= critter.get('name') %>  </h3>
         <p>  <%= critter.get('vernacularName') %>   </p>
         <p>  <%= critter.get('audio') %>   </p>
+        <p>  <%= critter.get('type') %>   </p>
       </div>
     <% }); %>
 </script>
+
+<!-- and one for the infoBox -->
+<script id="cinfo-template" type="text/x-handlebars-template">
+  <div class="cinfobox">
+    <h1><%= title %></h1>
+        
+    <button id="cplayall" type="button" class="play btn btn-primary">Play All 
+        <span class="badge"><%= allnum %></span>
+    </button> 
+    <button id="cplayfrogs" type="button" class="play btn btn-success" <%= typeof(frognum)!== 'undefined' ?  'disabled' : '' %> >
+        <span class="icon-bird"></span>Play frogs <span class="badge"><%=frognum%></span>
+    </button>  
+    <button id="cplaybirds" type="button" class="play btn btn-warning" <%= typeof(birdnum)!== 'undefined' ? 'disabled' : '' %> >
+        <span class="icon-bird"></span>Play birds <span class="badge"><%= birdnum %></span>
+    </button>      
+    <button id="cplayrandom" type="button" class="play btn btn-primary ">
+        <span class="icon-bird"></span>Play random!
+    </button>     
+    <div id="cplaycontrols" class="btn-group" role="group" aria-label="...">
+      <button id="cplaypause" type="button" class="btn btn-danger navbar-btn">
+        <span class="glyphicon glyphicon-pause"></span>Pause
+    </button>                
+    </div>  
+            
+  </div>
+</script>
+
+
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -135,6 +164,7 @@
 	<script src="bower_components/isotope/dist/isotope.pkgd.js"></script>
 	<script src="bower_components/underscore/underscore.js"></script>
 	<script src="bower_components/backbone/backbone.js"></script>
+    <script src="js/wavesurfer.min.js"></script>
 
     <script src="js/app.js"></script>
   </body>

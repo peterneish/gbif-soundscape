@@ -69,6 +69,16 @@ app.CritterView = Backbone.View.extend({
 app.critterView = new app.CritterView();
 
 app.MenuView = Backbone.View.extend({
+ el: '#cinfobox',
+     
+    initialize:function(){
+        //this.render();
+    },
+    render: function () {
+        var template = _.template($('#cinfobox-template').html());
+        var html = template({critters: app.critters.models});
+        this.$el.html(html);
+    }	
 
 });
 
@@ -104,30 +114,23 @@ $.getJSON('./data/sounds.json', function( data){
    
    app.critterView.render();
 
+   app.localities.each(function(loc){
 
+   	console.log(loc);
 
-   //console.log(app.localities);
-	
-   $.each( data, function(key, val){
-      localities[key] = val;
-	  //add to layer
-	  var bounds = [[val.lat[0], val.lon[0]],[val.lat[1], val.lon[1]]];
-	  localities[key].bounds = bounds;
-	  
-	  var rectangle = new L.rectangle(bounds, {color: "#ff7800", weight: 1});
+   	  var rectangle = new L.rectangle(loc.get('bounds'), {color: "#ff7800", weight: 1});
 	  var centre = rectangle.getBounds().getCenter();
-	  
-	  var marker = new customMarker(centre, {key: key})
-			.bindPopup(val.locality)
+
+	  var marker = new customMarker(centre, {key: loc.get('id')})
+			.bindPopup(loc.get('name'))
 			.on('click', markerClick)
 			.on('mouseover', function(e){ e.target.openPopup(); } )
 			.on('mouseout', function(e) { e.target.closePopup(); })
 			.addTo(map);
 	  
 	  localityLayer.addLayer(rectangle); 	  
-	  addMenuItem(key);
-	  
-   }) 
+	  addMenuItem(loc.get('id'));
+   });
 
    map.fitBounds(localityLayer.getBounds());  
    localityLayer.addTo(map);
@@ -136,15 +139,12 @@ $.getJSON('./data/sounds.json', function( data){
 
 function addMenuItem(key){
 		
-		option = $('<li><a href="#">' + localities[key].locality + '</a></li>').on('click',  function(e){			
+		option = $('<li><a href="#">' + app.localities.get(key).get('name') + '</a></li>').on('click',  function(e){			
 			select(key);
 			e.preventDefault();
 		});
 		
-		$('#area_choose').append(option);
-
-	  
-		
+		$('#area_choose').append(option);		
 }
 
 function select(key){
