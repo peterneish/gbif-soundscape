@@ -116,7 +116,7 @@ $.getJSON('./data/sounds.json', function( data){
 
    app.localities.each(function(loc){
 
-   	console.log(loc);
+   	//console.log(loc);
 
    	  var rectangle = new L.rectangle(loc.get('bounds'), {color: "#ff7800", weight: 1});
 	  var centre = rectangle.getBounds().getCenter();
@@ -169,6 +169,7 @@ function select(key){
 }
   
 function markerClick(m){
+	console.log(m);
 	if(m.hasOwnProperty('target') 
 		&& m.target.hasOwnProperty('options') 
 	    && m.target.options.hasOwnProperty('key')){
