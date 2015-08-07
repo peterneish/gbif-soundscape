@@ -55,14 +55,22 @@ app.lmap = new app.LMap({el: $('#mapb')});
 // view for a single critter
 app.CritterView = Backbone.View.extend({
  el: '#critterlist',
-     
+
     initialize:function(){
         //this.render();
+        this.critters = app.critters.models;
     },
     render: function () {
         var template = _.template($('#critterlist-template').html());
-        var html = template({critters: app.critters.models});
+        var html = template({critters: this.critters});
         this.$el.html(html);
+    },
+    filterById: function(id){
+    	console.log(id);
+
+    	this.critters = app.critters.where({"locality_id": id});
+     	console.log(this.critters);
+
     }
 });
 
@@ -116,8 +124,6 @@ $.getJSON('./data/sounds.json', function( data){
 
    app.localities.each(function(loc){
 
-   	//console.log(loc);
-
    	  var rectangle = new L.rectangle(loc.get('bounds'), {color: "#ff7800", weight: 1});
 	  var centre = rectangle.getBounds().getCenter();
 
@@ -154,26 +160,31 @@ function select(key){
 	$iso = $("#controls");
 	$iso.isotope({ itemSelector: '.item'});
 		
-	locality = localities[key]; 
+	locality = app.localities.get(key); 
 	if(locality){
 		$('#map').css('height', 250);
 
 		updateSounds(locality);
 		updateInfo(locality);
-		map.fitBounds(locality.bounds);
+		map.fitBounds(locality.get("bounds"));
 		
 		// and play some sounds
 		play('item');
-		
+			
 	}
 }
   
 function markerClick(m){
-	console.log(m);
+	//console.log(m);
 	if(m.hasOwnProperty('target') 
 		&& m.target.hasOwnProperty('options') 
 	    && m.target.options.hasOwnProperty('key')){
-			select(m.target.options.key); 
+			//select(m.target.options.key);
+			//app.critters = app.critters.where({"locality_id" : m.target.options.key});
+			//console.log(app.critters);
+			app.critterView.filterById(m.target.options.key);
+			app.critterView.render();
+
 	}			
 }	
 
