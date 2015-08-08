@@ -40,6 +40,8 @@ app.Localities = Backbone.Collection.extend({
 app.critters = new app.Critters();
 app.localities = new app.Localities();
 
+
+
 app.LMap = Backbone.View.extend({
 	model: app.localities,
 	initialize: function(){
@@ -52,29 +54,53 @@ app.LMap = Backbone.View.extend({
 
 app.lmap = new app.LMap({el: $('#mapb')});
 
-// view for a single critter
+// a single critter
 app.CritterView = Backbone.View.extend({
+	tagName: 'div',
+	template: _.template($('#critter-template').html()),
+	initialize:function(){
+		//this.wavesurfer = Object.create(WaveSurfer);
+		//this.wavesurfer.init({
+		//	container: this.el,
+		//	waveColor: 'violet',
+		//	progressColor: 'purple'
+		//});
+		//this.wavesurfer.on('ready', function(){
+		//	this.wavesurfer.play();
+		//});
+    },
+	render: function(){
+		this.$el.html(this.template({critter: this.model}));
+		return this;
+	}
+});
+
+// a list of critters
+app.CrittersView = Backbone.View.extend({
  el: '#critterlist',
 
     initialize:function(){
         //this.render();
-        this.critters = app.critters.models;
+        this.critters = app.critters;
     },
     render: function () {
-        var template = _.template($('#critterlist-template').html());
-        var html = template({critters: this.critters});
-        this.$el.html(html);
+		console.log("render called");
+		console.log(this.critters);
+		this.$el.html("");
+		this.critters.each( function(crit){
+			var critterView = new app.CritterView({model: crit});
+			this.$el.append(critterView.render().el);
+		}, this);
+		return this;
     },
     filterById: function(id){
-    	console.log(id);
-
-    	this.critters = app.critters.where({"locality_id": id});
-     	console.log(this.critters);
-
+		this.critters =  app.critters;
+    	this.critters = new app.Critters(app.critters.where({"locality_id": id}));
+		console.log(this.critters);
     }
 });
 
-app.critterView = new app.CritterView();
+app.crittersView = new app.CrittersView({critters: app.critters});
 
 app.MenuView = Backbone.View.extend({
  el: '#cinfobox',
@@ -120,7 +146,7 @@ $.getJSON('./data/sounds.json', function( data){
 	   }); 
    });
    
-   app.critterView.render();
+   //app.crittersView.render();
 
    app.localities.each(function(loc){
 
@@ -182,8 +208,8 @@ function markerClick(m){
 			//select(m.target.options.key);
 			//app.critters = app.critters.where({"locality_id" : m.target.options.key});
 			//console.log(app.critters);
-			app.critterView.filterById(m.target.options.key);
-			app.critterView.render();
+			app.crittersView.filterById(m.target.options.key);
+			app.crittersView.render();
 
 	}			
 }	

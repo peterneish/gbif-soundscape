@@ -118,15 +118,13 @@
 	</script>
     
 <!-- testing underscore template -->
-<script id="critterlist-template" type="text/template">
-    <% _.each(critters, function(critter) { %>
+<script id="critter-template" type="text/template">
       <div class=="critter" >
         <h3> <%= critter.get('name') %>  </h3>
         <p>  <%= critter.get('vernacularName') %>   </p>
         <p>  <%= critter.get('audio') %>   </p>
         <p>  <%= critter.get('type') %>   </p>
       </div>
-    <% }); %>
 </script>
 
 <!-- and one for the infoBox -->
@@ -164,7 +162,7 @@
 	<script src="bower_components/isotope/dist/isotope.pkgd.js"></script>
 	<script src="bower_components/underscore/underscore.js"></script>
 	<script src="bower_components/backbone/backbone.js"></script>
-    <script src="js/wavesurfer.min.js"></script>
+    <script src="bower_components/wavesurfer.js/dist/wavesurfer.min.js"></script>
 
     <script src="js/app.js"></script>
   </body>

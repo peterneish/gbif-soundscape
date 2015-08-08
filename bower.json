@@ -23,6 +23,7 @@
     "handlebars": "~3.0.0",
     "leaflet": "~0.7.3",
     "isotope": "~2.1.0",
-	"backbone": "~1.2.1"
+    "backbone": "~1.2.1",
+    "wavesurfer.js": "https://github.com/katspaugh/wavesurfer.js.git#b0c148123fb5839d8779241b6359e7ff0f45a311"
   }
 }
