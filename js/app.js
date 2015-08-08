@@ -59,16 +59,21 @@ app.CritterView = Backbone.View.extend({
 	tagName: 'div',
 	template: _.template($('#critter-template').html()),
 	initialize:function(){
-		//this.wavesurfer = Object.create(WaveSurfer);
-		//this.wavesurfer.init({
-		//	container: this.el,
-		//	waveColor: 'violet',
-		//	progressColor: 'purple'
-		//});
-		//this.wavesurfer.on('ready', function(){
-		//	this.wavesurfer.play();
-		//});
+		this.wavesurfer = Object.create(WaveSurfer);
+
+		this.wavesurfer.on('ready', function(){
+			this.wavesurfer.play();
+		});
     },
+	loadWave: function(){
+		console.log("critter"+this.model.cid);
+		this.wavesurfer.init({
+			container: document.querySelector("#critter"+this.model.cid),
+			waveColor: 'violet',
+			progressColor: 'purple'
+		});
+		this.wavesurfer.load(this.model.get("audio"));
+	},
 	render: function(){
 		this.$el.html(this.template({critter: this.model}));
 		return this;
@@ -90,6 +95,7 @@ app.CrittersView = Backbone.View.extend({
 		this.critters.each( function(crit){
 			var critterView = new app.CritterView({model: crit});
 			this.$el.append(critterView.render().el);
+			critterView.loadWave();
 		}, this);
 		return this;
     },
