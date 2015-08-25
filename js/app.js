@@ -1,7 +1,6 @@
 var app = {}; // set up namespace for our app
 
 // set up variables
-var localities = [];
 var active_locality = {};
 var map;
 var localityLayer = new L.featureGroup();
@@ -156,6 +155,12 @@ function addMenuItem(key){
 function select(key){
 	app.crittersView.filterById(key);
 	app.crittersView.render();
+
+	console.log(app.localities);
+
+    bounds = app.localities.get(key).get('bounds');
+    console.log(bounds);
+	map.fitBounds(bounds);
 }
   
 function markerClick(m){
@@ -164,8 +169,9 @@ function markerClick(m){
 		&& m.target.hasOwnProperty('options') 
 	    && m.target.options.hasOwnProperty('key')){
 
-			app.crittersView.filterById(m.target.options.key);
-			app.crittersView.render();
+			select(m.target.options.key);
+
+
 	}			
 }	
 

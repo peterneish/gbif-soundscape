@@ -101,7 +101,7 @@
 <script id="critter-template" type="text/template">
       <div class="col-md-2 col-sm-4 col-xs-12 item critter <%= critter.get('type') %>" id="critter<%=critter.cid%>">
         <div class="thumbnail">
-            <% if(critter.get('image')) { %>
+            <% if(typeof(critter.get('image'))!='undefined') { %>
                <img class="img-rounded" src="<%= critter.get('image') %>" alt="<% critter.get('name') %>">
             <% } else { %>
                 <p class="text-center"><span class="glyphicon glyphicon-lg glyphicon-remove"></span></p>
