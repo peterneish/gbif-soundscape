@@ -10,6 +10,8 @@
    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css">
    <link rel="stylesheet" href="css/style.css">
+   <link rel="css/wavesurfer/css/ribbon.css">
+   <link rel="css/wavesurfer/css/style.css">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -63,7 +65,7 @@
 				</div>
 		  </div>
 	  </div>
-      <div id="mapb" class="col-md-12"></div>
+
       <div id="critterlist"></div>
     </div><!-- /.container -->
 	
@@ -93,8 +95,40 @@
 				</div>
 		</div>
 	  </div>
+
 	</script>
-	
+<!-- testing underscore template -->
+<script id="critter-template" type="text/template">
+      <div class="col-md-2 col-sm-4 col-xs-12 item critter <%= critter.get('type') %>" id="critter<%=critter.cid%>">
+        <div class="thumbnail">
+            <% if(critter.get('image')) { %>
+               <img class="img-rounded" src="<%= critter.get('image') %>" alt="<% critter.get('name') %>">
+            <% } else { %>
+                <p class="text-center"><span class="glyphicon glyphicon-lg glyphicon-remove"></span></p>
+            <% } %>    
+        <div class="caption">  
+        <p class="clearfix">
+            <h4><%= critter.get('vernacularName') %></h4>
+            <h5><em><%= critter.get('name') %></em></h5>
+        
+            <audio controls loop>
+            <source src="<%= critter.get('audio') %>" type="audio/mpeg">
+            Sorry your browser does not support this audio format
+            </audio>
+            <small>Source: 
+                <% if (typeof(critter.get('image_reference'))!== 'undefined'){ %>
+                    <a href="<%=critter.get('image_reference') %>">image</a>
+                <% } %>    
+                <% if (typeof(critter.get('audio_reference'))!== 'undefined'){ %>
+                    <a href="<%=critter.get('audio_reference') %>">audio</a>
+                <% } %>    
+
+            </small>
+        </p>     
+
+        </div>
+      </div>
+</script>	
 	<!-- and one for the infoBox -->
 	<script id="info-template" type="text/x-handlebars-template">
 	  <div class="infobox">
@@ -117,15 +151,7 @@
 	  </div>
 	</script>
     
-<!-- testing underscore template -->
-<script id="critter-template" type="text/template">
-      <div class="critter" id="critter<%=critter.cid%>">
-        <h3> <%= critter.get('name') %>  </h3>
-        <p>  <%= critter.get('vernacularName') %>   </p>
-        <p>  <%= critter.get('audio') %>   </p>
-        <p>  <%= critter.get('type') %>   </p>
-      </div>
-</script>
+
 
 <!-- and one for the infoBox -->
 <script id="cinfo-template" type="text/x-handlebars-template">
@@ -157,12 +183,10 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/handlebars/handlebars.min.js"></script>
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
 	<script src="bower_components/isotope/dist/isotope.pkgd.js"></script>
 	<script src="bower_components/underscore/underscore.js"></script>
 	<script src="bower_components/backbone/backbone.js"></script>
-    <script src="bower_components/wavesurfer.js/dist/wavesurfer.min.js"></script>
 
     <script src="js/app.js"></script>
   </body>

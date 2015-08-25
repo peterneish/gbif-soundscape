@@ -1,5 +1,6 @@
 var app = {}; // set up namespace for our app
 
+// set up variables
 var localities = [];
 var active_locality = {};
 var map;
@@ -8,6 +9,7 @@ var sounds = [];
 var $iso;
 var limit = 30;
 
+// map details
 map = new L.Map('map');
 
 var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -22,16 +24,14 @@ customMarker = L.Marker.extend({
 	options: { key: 0 }
 });	
 
-// set up the template for the soundControl
-var taxon_template = Handlebars.compile($("#taxon-template").html());
-var info_template  = Handlebars.compile($("#info-template").html());
-
 // backbone model(s)
+// Critters holds all our organisms that we are displaying
 app.Critter = Backbone.Model.extend({});
 app.Critters = Backbone.Collection.extend({
 	model: app.Critter
 });
 
+//Details about the localities we can query
 app.Locality = Backbone.Model.extend({});
 app.Localities = Backbone.Collection.extend({
 	model: app.Locality
@@ -41,39 +41,10 @@ app.critters = new app.Critters();
 app.localities = new app.Localities();
 
 
-
-app.LMap = Backbone.View.extend({
-	model: app.localities,
-	initialize: function(){
-		this.render();
-	},
-	render: function(){
-		this.$el.html("hello there");
-	}
-});
-
-app.lmap = new app.LMap({el: $('#mapb')});
-
-// a single critter
+// a view for a single critter
 app.CritterView = Backbone.View.extend({
 	tagName: 'div',
 	template: _.template($('#critter-template').html()),
-	initialize:function(){
-		this.wavesurfer = Object.create(WaveSurfer);
-
-		this.wavesurfer.on('ready', function(){
-			this.wavesurfer.play();
-		});
-    },
-	loadWave: function(){
-		console.log("critter"+this.model.cid);
-		this.wavesurfer.init({
-			container: document.querySelector("#critter"+this.model.cid),
-			waveColor: 'violet',
-			progressColor: 'purple'
-		});
-		this.wavesurfer.load(this.model.get("audio"));
-	},
 	render: function(){
 		this.$el.html(this.template({critter: this.model}));
 		return this;
@@ -89,13 +60,10 @@ app.CrittersView = Backbone.View.extend({
         this.critters = app.critters;
     },
     render: function () {
-		console.log("render called");
-		console.log(this.critters);
 		this.$el.html("");
 		this.critters.each( function(crit){
 			var critterView = new app.CritterView({model: crit});
 			this.$el.append(critterView.render().el);
-			critterView.loadWave();
 		}, this);
 		return this;
     },
@@ -186,24 +154,8 @@ function addMenuItem(key){
 }
 
 function select(key){
-
-	// wipe current
-	$('#controls').html('');
-	$iso = $("#controls");
-	$iso.isotope({ itemSelector: '.item'});
-		
-	locality = app.localities.get(key); 
-	if(locality){
-		$('#map').css('height', 250);
-
-		updateSounds(locality);
-		updateInfo(locality);
-		map.fitBounds(locality.get("bounds"));
-		
-		// and play some sounds
-		play('item');
-			
-	}
+	app.crittersView.filterById(key);
+	app.crittersView.render();
 }
   
 function markerClick(m){
@@ -211,12 +163,9 @@ function markerClick(m){
 	if(m.hasOwnProperty('target') 
 		&& m.target.hasOwnProperty('options') 
 	    && m.target.options.hasOwnProperty('key')){
-			//select(m.target.options.key);
-			//app.critters = app.critters.where({"locality_id" : m.target.options.key});
-			//console.log(app.critters);
+
 			app.crittersView.filterById(m.target.options.key);
 			app.crittersView.render();
-
 	}			
 }	
 
