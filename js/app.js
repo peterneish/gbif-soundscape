@@ -6,7 +6,7 @@ var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
 var $iso;
-var limit = 30;
+var limit = 20;
 
 // map details
 map = new L.Map('map');
@@ -69,7 +69,18 @@ app.CrittersView = Backbone.View.extend({
     filterById: function(id){
 		this.critters =  app.critters;
     	this.critters = new app.Critters(app.critters.where({"locality_id": id}));
-		console.log(this.critters);
+    	console.log(this.critters);
+    	return this;
+		
+    },
+    filterRandom: function(num){
+
+    	randomCritters = this.critters.sample(num);
+    	this.critters = new app.Critters(randomCritters);
+    	console.log(this.critters);
+    	    	console.log(randomCritters);
+
+    	return this;
     }
 });
 
@@ -88,6 +99,8 @@ app.MenuView = Backbone.View.extend({
     }	
 
 });
+
+
 
 // load sound locality sound files
 $.getJSON('./data/sounds.json', function( data){
@@ -117,6 +130,8 @@ $.getJSON('./data/sounds.json', function( data){
 					 "type"       : "frog"});
 		   app.critters.push(crit);			
 	   }); 
+
+	   //console.log(JSON.stringify(app.critters));
    });
    
    //app.crittersView.render();
@@ -152,16 +167,7 @@ function addMenuItem(key){
 		$('#area_choose').append(option);		
 }
 
-function select(key){
-	app.crittersView.filterById(key);
-	app.crittersView.render();
 
-	console.log(app.localities);
-
-    bounds = app.localities.get(key).get('bounds');
-    console.log(bounds);
-	map.fitBounds(bounds);
-}
   
 function markerClick(m){
 	//console.log(m);
@@ -170,10 +176,20 @@ function markerClick(m){
 	    && m.target.options.hasOwnProperty('key')){
 
 			select(m.target.options.key);
-
-
 	}			
 }	
+
+function select(key){
+	app.crittersView.filterById(key).filterRandom(4);
+	app.crittersView.render();
+
+	//console.log(app.localities);
+
+    bounds = app.localities.get(key).get('bounds');
+    console.log(bounds);
+	map.fitBounds(bounds);
+}
+
 
 function updateInfo(l){
 
