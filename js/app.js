@@ -31,7 +31,9 @@ app.Critters = Backbone.Collection.extend({
 });
 
 //Details about the localities we can query
-app.Locality = Backbone.Model.extend({});
+app.Locality = Backbone.Model.extend({
+	idAttribute : 'name'
+});
 app.Localities = Backbone.Collection.extend({
 	model: app.Locality
 });
@@ -66,10 +68,13 @@ app.CrittersView = Backbone.View.extend({
 		}, this);
 		return this;
     },
-    filterById: function(id){
-		this.critters =  app.critters;
-    	this.critters = new app.Critters(app.critters.where({"locality_id": id}));
-    	console.log(this.critters);
+    filterByRegion: function(name){
+		var filtered = _.filter(app.critters.models, function(item){
+			console.log(item);
+			return _.contains(item.get("region"), name);
+		});
+		this.critters = new app.Critters(filtered);
+		console.log(this.critters);
     	return this;
 		
     },
@@ -77,8 +82,8 @@ app.CrittersView = Backbone.View.extend({
 
     	randomCritters = this.critters.sample(num);
     	this.critters = new app.Critters(randomCritters);
-    	console.log(this.critters);
-    	    	console.log(randomCritters);
+    	//console.log(this.critters);
+    	//console.log(randomCritters);
 
     	return this;
     }
@@ -103,45 +108,24 @@ app.MenuView = Backbone.View.extend({
 
 
 // load sound locality sound files
-$.getJSON('./data/sounds.json', function( data){
+$.getJSON('./data/locality_sounds.json', function( data){
 	
-	// parsing from [ locality [birds], [frogs] ] to [localities] and [critters]
-   $.each( data, function(key, val){
-	   var loc = new app.Locality({"lat": val.lat, 
-								   "lon": val.lon, 
-								   "bounds": [[val.lat[0], val.lon[0]],[val.lat[1], val.lon[1]]],
-								   "id":key, 
-								   "name": val.locality});
+   $.each( data.localities, function(key, val){
+   		loc = new app.Locality(val);
 	   app.localities.push(loc);
+	});
 	   
-	   // put make birds into critters
-	   $.each(val.birds, function(bkey, bval){
-		   var crit = new app.Critter(bval);
-		   crit.set({"locality_id": key,
-					 "locality"   : val.locality,
-					 "type"       : "bird"});
-		   app.critters.push(crit);			
-	   }); 
-	   // put make frogs into critters
-	   $.each(val.frogs, function(bkey, bval){
-		   var crit = new app.Critter(bval);
-		   crit.set({"locality_id": key,
-					 "locality"   : val.locality,
-					 "type"       : "frog"});
-		   app.critters.push(crit);			
-	   }); 
-
-	   console.log(JSON.stringify(app.localities));
-   });
+   $.each(data.taxa, function(key, val){
+	   var crit = new app.Critter(val);
+	   app.critters.push(crit);			
+   }); 
    
-   //app.crittersView.render();
-
    app.localities.each(function(loc){
 
    	  var rectangle = new L.rectangle(loc.get('bounds'), {color: "#ff7800", weight: 1});
 	  var centre = rectangle.getBounds().getCenter();
 
-	  var marker = new customMarker(centre, {key: loc.get('id')})
+	  var marker = new customMarker(centre, {name: loc.get('name')})
 			.bindPopup(loc.get('name'))
 			.on('click', markerClick)
 			.on('mouseover', function(e){ e.target.openPopup(); } )
@@ -149,7 +133,7 @@ $.getJSON('./data/sounds.json', function( data){
 			.addTo(map);
 	  
 	  localityLayer.addLayer(rectangle); 	  
-	  addMenuItem(loc.get('id'));
+	  addMenuItem(loc.get('name'));
    });
 
    map.fitBounds(localityLayer.getBounds());  
@@ -157,10 +141,10 @@ $.getJSON('./data/sounds.json', function( data){
  
 });
 
-function addMenuItem(key){
+function addMenuItem(name){
 		
-		option = $('<li><a href="#">' + app.localities.get(key).get('name') + '</a></li>').on('click',  function(e){			
-			select(key);
+		option = $('<li><a href="#">' + name + '</a></li>').on('click',  function(e){			
+			select(name);
 			e.preventDefault();
 		});
 		
@@ -173,20 +157,20 @@ function markerClick(m){
 	//console.log(m);
 	if(m.hasOwnProperty('target') 
 		&& m.target.hasOwnProperty('options') 
-	    && m.target.options.hasOwnProperty('key')){
+	    && m.target.options.hasOwnProperty('name')){
 
-			select(m.target.options.key);
+			select(m.target.options.name);
 	}			
 }	
 
-function select(key){
-	app.crittersView.filterById(key).filterRandom(4);
+function select(name){
+	app.crittersView.filterByRegion(name).filterRandom(4);
 	app.crittersView.render();
 
 	//console.log(app.localities);
 
-    bounds = app.localities.get(key).get('bounds');
-    console.log(bounds);
+    bounds = app.localities.get(name).get('bounds');
+    //console.log(bounds);
 	map.fitBounds(bounds);
 }
 

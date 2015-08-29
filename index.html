@@ -32,17 +32,20 @@
           <a class="navbar-brand" href="">GBIF Soundscape</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-			
-			<ul class="nav navbar-nav">
-				<li><a href="http://untan.gl/gbif/sounds.html">About</a></li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Choose an area <span class="caret"></span></a>
-				<ul id="area_choose" class="dropdown-menu" role="menu">
-				</ul>
-</li>				
-			</ul>
+      			<ul class="nav navbar-nav">
+      				<li><a href="http://untan.gl/gbif/sounds.html">About</a></li>
+      			</ul>
+            <ul class="nav navbar-nav">
+                <li><a class="button" href="">Test</a>
+                   <li><a href="">Test</a>
+            </ul>
+      			<ul class="nav navbar-nav navbar-right">
+      				<li class="dropdown">
+      					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Choose an area <span class="caret"></span></a>
+      				<ul id="area_choose" class="dropdown-menu" role="menu">
+      				</ul>
+              </li>				
+      			</ul>
 		
 		</div>	
 	  </div><!--/.nav-collapse -->
@@ -69,35 +72,10 @@
       <div id="critterlist"></div>
     </div><!-- /.container -->
 	
-	<!-- the template for the soundControls -->
-	<script id="taxon-template" type="text/x-handlebars-template">
-	  <div class="col-md-2 col-sm-4 col-xs-12 item {{taxon}}">
-		<div class="thumbnail">	
-			{{#if image_src}}
-				<img class="img-rounded" src="{{image_src}}" alt="{{name}}">
-			{{else}}
-				<p class="text-center"><span class="glyphicon glyphicon-lg glyphicon-remove"></span></p>
-			{{/if}}
-				<div class="caption">
-					<p class="clearfix">
-						<h4>{{vernacular}}</h4>
-						<h5><em>{{name}}</em></h5>
-					
-						<audio controls loop>
-						<source src="{{audio_src}}" type="audio/mpeg">
-						Sorry your browser does not support this audio format
-						</audio>
-						<small>Source: 
-							{{#if image_credit}} <a href="{{image_credit}}">image</a>{{/if}} 
-							{{#if audio_credit}}<a href="{{audio_credit}}">audio</a>{{/if}}
-						</small>
-					</p>
-				</div>
-		</div>
-	  </div>
+
 
 	</script>
-<!-- testing underscore template -->
+<!-- templates -->
 <script id="critter-template" type="text/template">
       <div class="col-md-2 col-sm-4 col-xs-12 item critter <%= critter.get('type') %>" id="critter<%=critter.cid%>">
         <div class="thumbnail">
@@ -129,27 +107,7 @@
         </div>
       </div>
 </script>	
-	<!-- and one for the infoBox -->
-	<script id="info-template" type="text/template">
-	  <div class="infobox">
-		<h1>{{title}}</h1>
 
-				
-			<button id="playall" type="button" class="play btn btn-primary">Play All <span class="badge">{{allnum}}</span></button>	
-			<button id="playfrogs" type="button" class="play btn btn-success" {{#unless frognum}}disabled{{/unless}}><span class="icon-bird"></span>Play frogs <span class="badge">{{frognum}}</span></button>	
-			
-			<button id="playbirds" type="button" class="play btn btn-warning" {{#unless birdnum}}disabled{{/unless}}><span class="icon-bird"></span>Play birds <span class="badge">{{birdnum}}</span></button>		
-
-			<button id="playrandom" type="button" class="play btn btn-primary "><span class="icon-bird"></span>Play random!</button>	
-				 
-				
-			<div id="playcontrols" class="btn-group" role="group" aria-label="...">
-			  <button id="playpause" type="button" class="btn btn-danger navbar-btn"><span class="glyphicon glyphicon-pause"></span>Pause</button>			 	  
-			</div>  
-				
-
-	  </div>
-	</script>
     
 
 
