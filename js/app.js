@@ -131,7 +131,7 @@ $.getJSON('./data/sounds.json', function( data){
 		   app.critters.push(crit);			
 	   }); 
 
-	   //console.log(JSON.stringify(app.critters));
+	   console.log(JSON.stringify(app.localities));
    });
    
    //app.crittersView.render();
