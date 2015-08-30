@@ -29,39 +29,36 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="">GBIF Soundscape</a>
+          <a class="navbar-brand" href="/">GBIF Soundscape</a>
+          <ul class="nav navbar-nav" style="padding-left:30px;">
+                <li><a href="about.html">About</a></li> 
+            </ul>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-      			<ul class="nav navbar-nav">
-      				<li><a href="http://untan.gl/gbif/sounds.html">About</a></li>
-      			</ul>
-            <ul class="nav navbar-nav">
-                <li><a class="button" href="">Test</a>
-                   <li><a href="">Test</a>
-            </ul>
-      			<ul class="nav navbar-nav navbar-right">
-      				<li class="dropdown">
-      					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Choose an area <span class="caret"></span></a>
-      				<ul id="area_choose" class="dropdown-menu" role="menu">
-      				</ul>
-              </li>				
-      			</ul>
-		
-		</div>	
+      			<ul class="nav navbar-nav navbar-right"> 
+               <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Choose an area <span class="caret"></span></a>
+              <ul id="area_choose" class="dropdown-menu" role="menu">
+              </ul>
+              </li>               
+      			</ul>		
+		    </div>	
 	  </div><!--/.nav-collapse -->
      </div>
     </nav>
 
     <div id="container" class="container-fluid">
 	  <div id="toprow" class="row">
-		<div id="info" class="col-md-6 col-xs-12 col-lg-6">
-				<h1>Welcome to the GBIF Soundscape.</h1>
-				<p>This is an entry in the <a href="http://gbif.challengepost.com/">2015 Ebbe Nielsen Challenge</a> by Ben Raymond and Peter Neish.</p>
-				<p>Here you can listen to sounds sourced from GBIF records. Read more about this project <a href="http://untan.gl/gbif/sounds.html">here</a>.</p>
-				<p class="lead">To get started, please choose a locality from the map or the drop-down list above.</p>
-		</div>
-		<div id="map" class="col-md-6 col-xs-12 col-lg-6"></div>
-	  </div>
+
+		<div id="map" class="col-md-8 col-xs-12 col-lg-8"></div>
+
+        <div id="info" class="col-md-4 col-xs-12 col-lg-4">
+        <h1>Welcome to the GBIF Soundscape.</h1>
+        <p>This is an entry in the <a href="http://gbif.challengepost.com/">2015 Ebbe Nielsen Challenge</a> by Ben Raymond and Peter Neish.</p>
+        <p>Here you can listen to sounds sourced from GBIF records. Read more about this project <a href="http://untan.gl/gbif/sounds.html">here</a>.</p>
+        <p class="lead">To get started, please choose a locality from the map or the drop-down list above.</p>
+    </div>
+        </div>
 	  <div class="row">
 		  <div id="sounds" class="col-md-12">
 				<div id="controls">
@@ -89,7 +86,7 @@
             <h4><%= critter.get('vernacularName') %></h4>
             <h5><em><%= critter.get('name') %></em></h5>
         
-            <audio controls loop>
+            <audio controls loop style="display:none">
             <source src="<%= critter.get('audio') %>" type="audio/mpeg">
             Sorry your browser does not support this audio format
             </audio>
@@ -112,17 +109,17 @@
 
 
 <!-- and one for the infoBox -->
-<script id="cinfo-template" type="text/template">
+<script id="cinfobox-template" type="text/template">
   <div class="cinfobox">
     <h1><%= title %></h1>
         
     <button id="cplayall" type="button" class="play btn btn-primary">Play All 
-        <span class="badge"><%= allnum %></span>
+        <span class="badge"><%= typeof(allnum)!=='undefined' ? allnum : '' %></span>
     </button> 
-    <button id="cplayfrogs" type="button" class="play btn btn-success" <%= typeof(frognum)!== 'undefined' ?  'disabled' : '' %> >
+    <button id="cplayfrogs" type="button" class="play btn btn-success" <%= typeof(frognum)!== 'undefined' ?  '' : 'disabled' %> >
         <span class="icon-bird"></span>Play frogs <span class="badge"><%=frognum%></span>
     </button>  
-    <button id="cplaybirds" type="button" class="play btn btn-warning" <%= typeof(birdnum)!== 'undefined' ? 'disabled' : '' %> >
+    <button id="cplaybirds" type="button" class="play btn btn-warning" <%= typeof(birdnum)!== 'undefined' ? '' : 'disabled' %> >
         <span class="icon-bird"></span>Play birds <span class="badge"><%= birdnum %></span>
     </button>      
     <button id="cplayrandom" type="button" class="play btn btn-primary ">

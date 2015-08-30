@@ -1,12 +1,12 @@
 var app = {}; // set up namespace for our app
 
 // set up variables
-var active_locality = {};
+var filters = {};
 var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
 var $iso;
-var limit = 20;
+var limit = 3;
 
 // map details
 map = new L.Map('map');
@@ -59,6 +59,8 @@ app.CrittersView = Backbone.View.extend({
     initialize:function(){
         //this.render();
         this.critters = app.critters;
+        this.title = "";
+        this.allRegion = app.critters;
     },
     render: function () {
 		this.$el.html("");
@@ -66,44 +68,53 @@ app.CrittersView = Backbone.View.extend({
 			var critterView = new app.CritterView({model: crit});
 			this.$el.append(critterView.render().el);
 		}, this);
+
+		// and re-bind the buttons
+		bindButtons();
 		return this;
     },
     filterByRegion: function(name){
 		var filtered = _.filter(app.critters.models, function(item){
-			console.log(item);
 			return _.contains(item.get("region"), name);
 		});
 		this.critters = new app.Critters(filtered);
-		console.log(this.critters);
+		this.allRegion = new app.Critters(filtered);
     	return this;
 		
     },
     filterRandom: function(num){
-
-    	randomCritters = this.critters.sample(num);
+    	randomFrogs = _.sample(this.allRegion.where({"type": "frog"}), num);
+    	randomBirds = _.sample(this.allRegion.where({"type": "bird"}), num);
+    	//randomCritters = this.critters.sample(num);
+    	randomCritters = _.sample(randomFrogs.concat(randomBirds), num);
     	this.critters = new app.Critters(randomCritters);
-    	//console.log(this.critters);
-    	//console.log(randomCritters);
-
     	return this;
+    },
+    getInfo: function(){
+    	return {"allnum" : 20, "frognum" : 3, "birdnum": 12};
     }
 });
 
 app.crittersView = new app.CrittersView({critters: app.critters});
 
 app.MenuView = Backbone.View.extend({
- el: '#cinfobox',
+ el: '#info',
      
     initialize:function(){
         //this.render();
     },
-    render: function () {
+    render: function (name, info) {
+    	// get some numbers
         var template = _.template($('#cinfobox-template').html());
-        var html = template({critters: app.critters.models});
+
+        var html = template($.extend(info,{critters: app.critters.models, title: name}));
         this.$el.html(html);
+        bindButtons();
     }	
 
 });
+
+app.menuview = new app.MenuView();
 
 
 
@@ -138,8 +149,53 @@ $.getJSON('./data/locality_sounds.json', function( data){
 
    map.fitBounds(localityLayer.getBounds());  
    localityLayer.addTo(map);
+   bindButtons();
  
 });
+
+function bindButtons(){
+	$('#cplayrandom').on('click', function(){
+		app.crittersView.filterRandom(limit);
+		app.crittersView.render();
+		$('audio').trigger('play');
+		$('.item').addClass('playing');
+	});
+
+	$('.item').on('click', function(){
+		var $i = $(this);
+		if($i.hasClass('playing')){
+			$i.find('audio').trigger('pause');
+			$i.removeClass('playing');
+		}
+		else{
+			$i.find('audio').trigger('play');
+			$i.addClass('playing');
+		}
+	});
+
+	$('#cplayall').on('click', function(){
+		$('audio').trigger('play');
+		$('.item').addClass('playing');
+	})
+
+	$('#cplaypause').on('click', function(){
+		$('audio').trigger('pause');
+		$('.item').removeClass('playing');
+	})
+}
+
+function playVisible(){
+	$('audio').trigger('play');
+	$('.item').addClass('playing');
+}
+function pauseVisible(){
+	$('audio').trigger('pause');
+	$('.item').removeClass('playing');
+}
+
+
+
+
 
 function addMenuItem(name){
 		
@@ -150,8 +206,6 @@ function addMenuItem(name){
 		
 		$('#area_choose').append(option);		
 }
-
-
   
 function markerClick(m){
 	//console.log(m);
@@ -159,153 +213,24 @@ function markerClick(m){
 		&& m.target.hasOwnProperty('options') 
 	    && m.target.options.hasOwnProperty('name')){
 
-			select(m.target.options.name);
+		select(m.target.options.name);
 	}			
 }	
 
 function select(name){
-	app.crittersView.filterByRegion(name).filterRandom(4);
+	app.crittersView.filterByRegion(name).filterRandom(limit);
 	app.crittersView.render();
-
-	//console.log(app.localities);
-
     bounds = app.localities.get(name).get('bounds');
-    //console.log(bounds);
 	map.fitBounds(bounds);
+	updateInfoC(name);
+	playVisible();
+	
+}
+
+function updateInfoC(n){
+	//$('#info').empty();
+	app.menuview.render(n, app.crittersView.getInfo());
+
 }
 
 
-function updateInfo(l){
-
-	var bird_number = l.birds.length;
-	if(bird_number > limit){ bird_number = limit; }
-	var frog_number = l.frogs.length;
-	if(frog_number > limit){ frog_number = limit; }
-	
-	$('#info').empty();
-	
-	$('#info').html(info_template({title: l.locality, 
-								   birdnum: bird_number,
-								   frognum: frog_number,
-								   allnum: bird_number + frog_number}));
-								   
-	// bind events
-	$(".btn .play").on('click', function(e){
-		$iso.isotope({filter: '.playing'});
-		$(this).addClass("active").siblings().removeClass("active");
-	});
-	
-	$("#playbirds").on('click', function(e){
-		play("bird");		
-	});
-	
-	$("#playfrogs").on('click', function(e){
-		play("frog");		
-	});
-	
-	$("#playall").on('click', function(e){
-		play("item");		
-	});
-	
-	$("#playrandom").on('click', function(e){
-		$('.item').each(function(a){
-			if(Math.random() < 0.5){
-				$(this).find('audio')[0].play();
-				$(this).addClass("playing");
-			}
-			else{
-				$(this).find('audio')[0].pause();
-				$(this).removeClass("playing");
-			}
-		});	
-	
-		$iso.isotope({filter: '.playing' });
-
-	});
-	
-	$("#playpause").on('click', function(){
-		pauseAll();
-	});	
-	
-	// and this is to handle manual changes to the native audio controls
-	$('audio').on('click', function(){
-		if(this.paused == false){
-			$(this).parents('.item').addClass('paused');
-			$(this).parents('.item').removeClass('playing');
-		}
-		else{
-			$(this).parents('.item').addClass('playing');
-			$(this).parents('.item').removeClass('paused');
-		}
-	});
-}
-
-function playOne(i){
-	$(i).find('audio')[0].play();
-
-}
-
-function pauseOne(i){
-	$(i).find('audio')[0].pause();
-}
-
-function pauseAll(){
-	$('.item').each(function(){
-		pauseOne(this);
-		$(this).removeClass('playing');
-	});		
-}
-
-function playPause(){
-	$('.item').each(function(){
-		if($(this).hasClass('playing')){
-				pauseOne(this);
-		}
-		else if($(this).hasClass('paused')){
-			playOne(this);
-		}
-	});
-}
-
-function play(what){
-	
-	pauseAll();
-	
-	$('.'+ what + ' audio').each(function(){
-			this.play();
-			$(this).parents('div.item').toggleClass('playing');
-	});	
-	
-	$iso.isotope({filter: '.playing' });
-
-}
-
-function updateSounds(l){
-
-	$.each(l.frogs, function (i, frog){
-		if(i < limit){ 
-			$("#controls").append(makeSoundControl("frog", frog));
-		}
-	});
-	
-	$.each(l.birds, function (i, bird){
-		if(i < limit){
-			$("#controls").append(makeSoundControl("bird", bird));
-		}
-	});
-
-	// and propagate styling if user clicks directly on the control
-	$('audio').on('click', function(){
-		$(this).parents('.item').get(0).toggleClass('playing');
-	});	
-	
-	$iso.isotope('reloadItems');
-
-}
-
-function makeSoundControl(tax, t){
-	
-	var context = {image_src: t.image, name: t.name, vernacular: t.vernacularName, taxon: tax, audio_src: t.audio, audio_credit: t.audio_reference, image_credit: t.image_reference}; 
-	
-	return taxon_template(context);
-}
