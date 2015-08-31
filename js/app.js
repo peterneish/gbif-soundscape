@@ -53,6 +53,7 @@ app.CritterView = Backbone.View.extend({
 });
 
 // a list of critters
+// most of the logic happens here
 app.CrittersView = Backbone.View.extend({
  el: '#critterlist',
 
@@ -91,7 +92,18 @@ app.CrittersView = Backbone.View.extend({
     	return this;
     },
     getInfo: function(){
-    	return {"allnum" : 20, "frognum" : 3, "birdnum": 12};
+        var rall = this.allRegion.models.length;
+        var rbirds = this.allRegion.where({"type": "bird"}).length;
+        var rfrogs = this.allRegion.where({"type": "frog"}).length;
+
+        var all = this.critters.models.length;
+        var birds = this.critters.where({"type": "bird"}).length;
+        var frogs = this.critters.where({"type": "frog"}).length;
+
+
+        
+    	return {"rallnum" : rall, "rfrognum" : rfrogs, "rbirdnum": rbirds,
+                "allnum" : all, "frognum": frogs, "birdnum": birds};
     }
 });
 
