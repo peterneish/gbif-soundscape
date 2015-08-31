@@ -54,8 +54,8 @@
 
         <div id="info" class="col-md-4 col-xs-12 col-lg-4">
         <h1>Welcome to the GBIF Soundscape.</h1>
-        <p>This is an entry in the <a href="http://gbif.challengepost.com/">2015 Ebbe Nielsen Challenge</a> by Ben Raymond and Peter Neish.</p>
-        <p>Here you can listen to sounds sourced from GBIF records. Read more about this project <a href="http://untan.gl/gbif/sounds.html">here</a>.</p>
+        <p>This is an entry in round 2 of the <a href="http://gbif2.devpost.com/">2015 Ebbe Nielsen Challenge</a> by Ben Raymond and Peter Neish.</p>
+        <p>Here you can listen to sounds sourced from GBIF records. Read more about this project <a href="about.html">here</a>.</p>
         <p class="lead">To get started, please choose a locality from the map or the drop-down list above.</p>
     </div>
         </div>
@@ -114,18 +114,21 @@
     <h1><%= title %></h1>
     <div>
       <p>In this area there are <%= rallnum %> species that have sounds recorded in GBIF, including <%= rbirdnum %> birds and <%= rfrognum %> frog<%= rfrognum == 1 ? '' : 's'%>.</p>
+      <% if(rallnum > 12){%>
       <p> We have shown a random selection below (we can't show too many at once because most browsers can't handle it - and it sounds awful!). </p>
+      <%}%>
       <p>Click on refresh below to choose a new selection.</p>
     </div>
     <div class="btn-group" role="group">    
       <button id="cplayall" type="button" class="play btn btn-primary">Play All 
           <span class="badge"><%= typeof(allnum)!=='undefined' ? allnum : '' %></span>
       </button> 
+            <button id="cplaybirds" type="button" class="play btn btn-warning" <%= typeof(birdnum)!== 'undefined' ? '' : 'disabled' %> >Play birds <span class="badge"><%= birdnum %></span>
+    </button>
       <button id="cplayfrogs" type="button" class="play btn btn-success" <%= typeof(frognum)!== 'undefined' ?  '' : 'disabled' %> >
           <span class="icon-bird"></span>Play frogs <span class="badge"><%=frognum%></span>
       </button>  
-      <button id="cplaybirds" type="button" class="play btn btn-warning" <%= typeof(birdnum)!== 'undefined' ? '' : 'disabled' %> >Play birds <span class="badge"><%= birdnum %></span>
-    </button>
+
     </div>
     <div>      
       <button id="cplayrandom" type="button" class="play btn btn-primary ">
@@ -137,7 +140,8 @@
       </button>                
       </div>
     </div>  
-            
+     <div><p>Note: click on a species to play or pause.</p>
+     </div>       
   </div>
 </script>
 

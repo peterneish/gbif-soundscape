@@ -6,7 +6,7 @@ var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
 var $iso;
-var limit = 3;
+var limit = 12;
 
 // map details
 map = new L.Map('map');
@@ -70,8 +70,6 @@ app.CrittersView = Backbone.View.extend({
 			this.$el.append(critterView.render().el);
 		}, this);
 
-		// and re-bind the buttons
-		bindButtons();
 		return this;
     },
     filterByRegion: function(name){
@@ -121,7 +119,6 @@ app.MenuView = Backbone.View.extend({
 
         var html = template($.extend(info,{critters: app.critters.models, title: name}));
         this.$el.html(html);
-        bindButtons();
     }	
 
 });
@@ -166,15 +163,17 @@ $.getJSON('./data/locality_sounds.json', function( data){
 });
 
 function bindButtons(){
-	$('#cplayrandom').on('click', function(){
+	$('#info').on('click', '#cplayrandom',function(){
 		app.crittersView.filterRandom(limit);
 		app.crittersView.render();
 		$('audio').trigger('play');
 		$('.item').addClass('playing');
 	});
 
-	$('.item').on('click', function(){
+	$('#critterlist').on('click', ".item", function(){
+
 		var $i = $(this);
+        console.log($i);
 		if($i.hasClass('playing')){
 			$i.find('audio').trigger('pause');
 			$i.removeClass('playing');
@@ -185,15 +184,30 @@ function bindButtons(){
 		}
 	});
 
-	$('#cplayall').on('click', function(){
+	$('#info').on('click', '#cplayall', function(){
 		$('audio').trigger('play');
 		$('.item').addClass('playing');
-	})
+	});
 
-	$('#cplaypause').on('click', function(){
+	$('#info').on('click', '#cplaypause', function(){
 		$('audio').trigger('pause');
 		$('.item').removeClass('playing');
-	})
+	});
+
+    $('#info').on('click', '#cplaybirds', function(){
+        $('.item.bird audio').trigger('play');
+        $('.item.bird').addClass('playing');
+        $('.item.frog.audio').trigger('pause');
+        $('.item.frog').removeClass('playing');
+    });
+
+      $('#info').on('click', '#cplayfrogs', function(){
+        $('.item.frog audio').trigger('play');
+        $('.item.frog').addClass('playing');
+        $('.item.bird.audio').trigger('pause');
+        $('.item.bird').removeClass('playing');
+    });  
+
 }
 
 function playVisible(){

@@ -33,11 +33,11 @@ span.glyphicon-lg {
 }
 
 .item {
-	height: 350px;
+	height: 300px;
 }
 
 .item .thumbnail {
-	max-height: 340px;
+	max-height: 290px;
 }	
 
 
