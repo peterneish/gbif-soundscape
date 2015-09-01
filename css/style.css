@@ -12,8 +12,12 @@ body {
 	padding-top: 10px;
 }	
 
-#map, #critterlist {
-    margin-left: 1px solid #333;
+#waitinglist img {
+    height:50px;
+}
+
+#waitinglist {
+    padding-top:10px;
 }
 
 
@@ -25,9 +29,7 @@ body {
 	clear:both;
 }
 
-#playme {
-    border: 1px solid #888;
-}
+
 
 
 #container{
@@ -39,13 +41,8 @@ span.glyphicon-lg {
 		font-size:36px;
 }
 
-.item {
-	height: 300px;
-}
 
-.item .thumbnail {
-	max-height: 290px;
-}	
+
 
 
 
@@ -70,8 +67,8 @@ span.glyphicon-lg {
 }
 
 
-#playcontrols, #taxachoose {
-	margin-left: 30px;
+#cplayall, #cplaypause {
+    width: 80px;
 }
 
 audio { width: 140px; display: block; margin-top:20px; }

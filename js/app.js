@@ -8,6 +8,7 @@ var sounds = [];
 var $iso;
 var limit = 3; // initial seed of playing critters
 var max = 36;   // maximum a user can add to playing
+var playing = false; // sate
 
 // map details
 map = new L.Map('map');
@@ -43,6 +44,8 @@ app.Critters = Backbone.Collection.extend({
         return new app.Critters(filtered);
     },
     playRandom: function(num){
+        // first reset the collection
+        this.invoke('set', {"playing": false});
         // sets n random critters playing
         randomFrogs = _.sample(this.where({"type": "frog"}), num);
         randomBirds = _.sample(this.where({"type": "bird"}), num);
@@ -90,6 +93,16 @@ app.localities = new app.Localities();
 // a view for a single critter
 app.CritterPlayingView = Backbone.View.extend({
 	tagName: 'div',
+    events: {
+        "click button.remove": "remove"
+    },
+    remove: function(e){
+        e.preventDefault();
+        this.model.set({"playing": false});
+        app.crittersView.render();
+        app.waitingView.render();
+        playVisible();
+    },
 	template: _.template($('#critterplaying-template').html()),
 	render: function(){
 		this.$el.html(this.template({critter: this.model}));
@@ -99,7 +112,7 @@ app.CritterPlayingView = Backbone.View.extend({
 
 // a view for a single critter
 app.CritterWaitingView = Backbone.View.extend({
-    tagName: 'li',
+    tagName: 'a',
     events: {
         "click a": "clicked"
     },
@@ -229,10 +242,9 @@ $.getJSON('./data/locality_data_cached.json', function( data){
 
 function bindButtons(){
 	$('#info').on('click', '#cplayrandom',function(){
-		app.crittersView.filterRandom(limit);
-		app.crittersView.render();
-		$('audio').trigger('play');
-		$('.item').addClass('playing');
+		app.regionCritters.playRandom(limit);
+        app.crittersView.render();
+        playVisible();
 	});
 
 	$('#critterlist').on('click', ".item", function(){
@@ -277,10 +289,14 @@ function bindButtons(){
 function playVisible(){
 	$('audio').trigger('play');
 	$('.item').addClass('playing');
+    $("button.cplaypause span").removeClass("glyphicon-pause")
+                               .addClass("glyphicon-play");
 }
 function pauseVisible(){
 	$('audio').trigger('pause');
 	$('.item').removeClass('playing');
+    $("button.cplaypause span").removeClass("glyphicon-play")
+                               .addClass("glyphicon-pause");
 }
 
 
@@ -316,6 +332,7 @@ function select(name){
     bounds = app.localities.get(name).get('bounds');
 	map.fitBounds(bounds);
 	playVisible();
+
 }
 
 
