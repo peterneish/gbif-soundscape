@@ -8,7 +8,7 @@ downloader = urllib.URLopener()
 
 limit = 5000
 num = 0
-
+start = 500
 with open('locality_sounds.json') as jdata:
     d = json.load(jdata) 
     for i in d["taxa"]:
@@ -21,12 +21,13 @@ with open('locality_sounds.json') as jdata:
             audioextension = os.path.splitext(i['audio'])[1]
             newfile = str(num)+extension
         
-            downloader.retrieve(i['image'], 'images/'+newfile)
+            if num >= start:
+                 downloader.retrieve(i['image'], 'images/'+newfile)
+            i['image'] = "cache/images/" + str(num)+extension
+            i['audio'] = "cache/sounds/" + str(num)+audioextension
         except :
-            print "*** Error "+str(num) + " imagefile: "  + i['image']
-            print "name: " + i['name']
-        i['image'] = str(num)+extension
-        i['audio'] = str(num)+audioextension
+            print "*** Error "+str(num) + " imagefile: "  + str(i['image'])
+            print "name: " + str(i['name'])
         num += 1
         #time.sleep(2)
     with open('locality_data_cached.json', 'w') as outfile:

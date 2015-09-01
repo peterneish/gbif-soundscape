@@ -8,10 +8,13 @@ body {
 	padding-top:50px;
 }
 
-#sounds {
-	margin-top: 10px;
+#critterlist {
+	padding-top: 10px;
 }	
 
+#map, #critterlist {
+    margin-left: 1px solid #333;
+}
 
 
 #map {
@@ -20,6 +23,10 @@ body {
 
 .clear {
 	clear:both;
+}
+
+#playme {
+    border: 1px solid #888;
 }
 
 

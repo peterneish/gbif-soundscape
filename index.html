@@ -30,9 +30,8 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/">GBIF Soundscape</a>
-          <ul class="nav navbar-nav" style="padding-left:30px;">
-                <li><a href="about.html">About</a></li> 
-            </ul>
+
+         <p class="navbar-text"><a class="navbar-link" href="about.html">About</a></p>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
       			<ul class="nav navbar-nav navbar-right"> 
@@ -50,30 +49,42 @@
     <div id="container" class="container-fluid">
 	  <div id="toprow" class="row">
 
-		<div id="map" class="col-md-8 col-xs-12 col-lg-8"></div>
 
-        <div id="info" class="col-md-4 col-xs-12 col-lg-4">
-        <h1>Welcome to the GBIF Soundscape.</h1>
-        <p>This is an entry in round 2 of the <a href="http://gbif2.devpost.com/">2015 Ebbe Nielsen Challenge</a> by Ben Raymond and Peter Neish.</p>
-        <p>Here you can listen to sounds sourced from GBIF records. Read more about this project <a href="about.html">here</a>.</p>
-        <p class="lead">To get started, please choose a locality from the map or the drop-down list above.</p>
+
+      <div id="info" class="col-md-4 col-xs-12 col-lg-4">
+          <h1>Welcome to the GBIF Soundscape.</h1>
+          <p>This is an entry in round 2 of the <a href="http://gbif2.devpost.com/">2015 Ebbe Nielsen Challenge</a> by Ben Raymond and Peter Neish.</p>
+          <p>Here you can listen to sounds sourced from GBIF records. Read more about this project <a href="about.html">here</a>.</p>
+          <p class="lead">To get started, please choose a locality from the map or the drop-down list above.</p>
+      </div>
+      <div id="map" class="col-md-8 col-xs-12 col-lg-8">
+      </div>
     </div>
-        </div>
 	  <div class="row">
-		  <div id="sounds" class="col-md-12">
-				<div id="controls">
-				</div>
-		  </div>
-	  </div>
 
-      <div id="critterlist"></div>
+
+
+
+      <div id="playme" class="col-md-4" style="display:none;">
+        <ul id="waitinglist">
+        </ul>
+      </div>
+
+      <div id="critterlist" class="col-md-8"></div>
+
     </div><!-- /.container -->
 	
 
 
 	</script>
+
 <!-- templates -->
-<script id="critter-template" type="text/template">
+<script id="critterwaiting-template" type="text/template">
+  <li><a href="#"><%=critter.get('name')%></a></li>
+</script>
+
+
+<script id="critterplaying-template" type="text/template">
       <div class="col-md-2 col-sm-4 col-xs-12 item critter <%= critter.get('type') %>" id="critter<%=critter.cid%>">
         <div class="thumbnail">
             <% if(typeof(critter.get('image'))!='undefined') { %>
@@ -113,20 +124,20 @@
   <div class="cinfobox">
     <h1><%= title %></h1>
     <div>
-      <p>In this area there are <%= rallnum %> species that have sounds recorded in GBIF, including <%= rbirdnum %> birds and <%= rfrognum %> frog<%= rfrognum == 1 ? '' : 's'%>.</p>
-      <% if(rallnum > 12){%>
+      <p>In this area there are <%= total %> species that have sounds recorded in GBIF, including <%= numbirds %> birds and <%= numfrogs %> frog<%= numfrogs == 1 ? '' : 's'%>.</p>
+      <% if(total > 12){%>
       <p> We have shown a random selection below (we can't show too many at once because most browsers can't handle it - and it sounds awful!). </p>
       <%}%>
       <p>Click on refresh below to choose a new selection.</p>
     </div>
     <div class="btn-group" role="group">    
       <button id="cplayall" type="button" class="play btn btn-primary">Play All 
-          <span class="badge"><%= typeof(allnum)!=='undefined' ? allnum : '' %></span>
+          <span class="badge"><%= typeof(total)!=='undefined' ? total : '' %></span>
       </button> 
-            <button id="cplaybirds" type="button" class="play btn btn-warning" <%= typeof(birdnum)!== 'undefined' ? '' : 'disabled' %> >Play birds <span class="badge"><%= birdnum %></span>
+            <button id="cplaybirds" type="button" class="play btn btn-warning" <%= typeof(numbirds)!== 'undefined' ? '' : 'disabled' %> >Play birds <span class="badge"><%= numbirds %></span>
     </button>
-      <button id="cplayfrogs" type="button" class="play btn btn-success" <%= typeof(frognum)!== 'undefined' ?  '' : 'disabled' %> >
-          <span class="icon-bird"></span>Play frogs <span class="badge"><%=frognum%></span>
+      <button id="cplayfrogs" type="button" class="play btn btn-success" <%= typeof(numfrogs)!== 'undefined' ?  '' : 'disabled' %> >
+          <span class="icon-bird"></span>Play frogs <span class="badge"><%=numfrogs%></span>
       </button>  
 
     </div>

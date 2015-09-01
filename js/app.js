@@ -6,7 +6,8 @@ var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
 var $iso;
-var limit = 12;
+var limit = 3; // initial seed of playing critters
+var max = 36;   // maximum a user can add to playing
 
 // map details
 map = new L.Map('map');
@@ -25,110 +26,174 @@ customMarker = L.Marker.extend({
 
 // backbone model(s)
 // Critters holds all our organisms that we are displaying
-app.Critter = Backbone.Model.extend({});
+app.Critter = Backbone.Model.extend({
+    defaults: {
+            "playing": false
+    }
+});
 app.Critters = Backbone.Collection.extend({
-	model: app.Critter
+	model: app.Critter,
+    comparator: function( collection ){
+        return (collection.get('name'));
+    },
+    getByRegion: function(name){
+        var filtered = _.filter(this.models, function(item){
+            return _.contains(item.get("region"), name);
+        });
+        return new app.Critters(filtered);
+    },
+    playRandom: function(num){
+        // sets n random critters playing
+        randomFrogs = _.sample(this.where({"type": "frog"}), num);
+        randomBirds = _.sample(this.where({"type": "bird"}), num);
+        //randomCritters = this.critters.sample(num);
+        randomCritters = _.sample(randomFrogs.concat(randomBirds), num);
+        $.each(randomCritters,function(i, model){
+            model.attributes.playing = true;
+        });
+
+        this.set(randomCritters, {"remove": false});
+    },
+    numTotal: function(){
+        return this.models.length;
+    },
+    numBirds: function(){
+        return this.where({"type": "bird"}).length;
+    },
+    numFrogs: function(){
+        return this.where({"type": "frog"}).length;
+    },
+    numPlaying: function(){
+        return this.where({"playing": true}).length;
+    }
 });
 
 //Details about the localities we can query
 app.Locality = Backbone.Model.extend({
 	idAttribute : 'name'
 });
+
 app.Localities = Backbone.Collection.extend({
 	model: app.Locality
 });
 
+// holds all critters from all regions
 app.critters = new app.Critters();
+
+// holds the critters for a region
+app.regionCritters = new app.Critters();
+
+// the localities
 app.localities = new app.Localities();
 
 
 // a view for a single critter
-app.CritterView = Backbone.View.extend({
+app.CritterPlayingView = Backbone.View.extend({
 	tagName: 'div',
-	template: _.template($('#critter-template').html()),
+	template: _.template($('#critterplaying-template').html()),
 	render: function(){
 		this.$el.html(this.template({critter: this.model}));
 		return this;
 	}
 });
 
-// a list of critters
-// most of the logic happens here
-app.CrittersView = Backbone.View.extend({
- el: '#critterlist',
-
-    initialize:function(){
-        //this.render();
-        this.critters = app.critters;
-        this.title = "";
-        this.allRegion = app.critters;
+// a view for a single critter
+app.CritterWaitingView = Backbone.View.extend({
+    tagName: 'li',
+    events: {
+        "click a": "clicked"
     },
-    render: function () {
-		this.$el.html("");
-		this.critters.each( function(crit){
-			var critterView = new app.CritterView({model: crit});
-			this.$el.append(critterView.render().el);
-		}, this);
+    clicked: function(e){
+        e.preventDefault();
+        console.log("numplaying:" + app.regionCritters.numPlaying()+ 
+            " max: " + max);
+        if(app.regionCritters.numPlaying() < max){
+            this.model.set({"playing" : true});
+            app.regionCritters.trigger('reload');
+            app.crittersView.render();
+            app.waitingView.render();
+            playVisible();
+        }
 
-		return this;
     },
-    filterByRegion: function(name){
-		var filtered = _.filter(app.critters.models, function(item){
-			return _.contains(item.get("region"), name);
-		});
-		this.critters = new app.Critters(filtered);
-		this.allRegion = new app.Critters(filtered);
-    	return this;
-		
-    },
-    filterRandom: function(num){
-    	randomFrogs = _.sample(this.allRegion.where({"type": "frog"}), num);
-    	randomBirds = _.sample(this.allRegion.where({"type": "bird"}), num);
-    	//randomCritters = this.critters.sample(num);
-    	randomCritters = _.sample(randomFrogs.concat(randomBirds), num);
-    	this.critters = new app.Critters(randomCritters);
-    	return this;
-    },
-    getInfo: function(){
-        var rall = this.allRegion.models.length;
-        var rbirds = this.allRegion.where({"type": "bird"}).length;
-        var rfrogs = this.allRegion.where({"type": "frog"}).length;
-
-        var all = this.critters.models.length;
-        var birds = this.critters.where({"type": "bird"}).length;
-        var frogs = this.critters.where({"type": "frog"}).length;
-
-
-        
-    	return {"rallnum" : rall, "rfrognum" : rfrogs, "rbirdnum": rbirds,
-                "allnum" : all, "frognum": frogs, "birdnum": birds};
+    template: _.template($('#critterwaiting-template').html()),
+    render: function(){
+        this.$el.html(this.template({critter: this.model}));
+        return this;
     }
 });
 
-app.crittersView = new app.CrittersView({critters: app.critters});
 
-app.MenuView = Backbone.View.extend({
- el: '#info',
-     
+
+// a list of critters
+app.CrittersPlayingView = Backbone.View.extend({
+ el: '#critterlist',
+
     initialize:function(){
-        //this.render();
+        this.critters = app.regionCritters;
+        this.listenTo(app.regionCritters, 'reload', this.render);
     },
-    render: function (name, info) {
+    render: function () {
+        console.log("critter render!");
+		this.$el.html("");
+		app.regionCritters.each( function(crit){
+            if(crit.get('playing')){
+			     var critterView = new app.CritterPlayingView({model: crit});
+			     this.$el.append(critterView.render().el);
+             }
+		}, this);
+
+		return this;
+    }
+});
+
+// critters that are in the waiting list ready to be added
+app.CrittersWaitingView = Backbone.View.extend({
+ el: '#waitinglist',
+
+    initialize:function(){
+        this.critters = app.regionCritters;
+        this.listenTo(this.critters, 'change', this.render);
+    },
+    render: function () {
+        this.$el.html("");
+        app.regionCritters.each( function(crit){
+            if(!crit.get('playing')){
+                 var critterView = new app.CritterWaitingView({model: crit});
+                 this.$el.append(critterView.render().el);
+             }
+        }, this);
+
+        return this;
+    }
+});
+
+app.crittersView = new app.CrittersPlayingView({critters: app.regionCritters});
+
+app.waitingView = new app.CrittersWaitingView({critters: app.regionCritters});
+
+app.InfoView = Backbone.View.extend({
+    el: '#info',
+    render: function (title) {
     	// get some numbers
+        var total = app.regionCritters.numTotal();
+        var numfrogs = app.regionCritters.numFrogs();
+        var numbirds = app.regionCritters.numBirds();
         var template = _.template($('#cinfobox-template').html());
 
-        var html = template($.extend(info,{critters: app.critters.models, title: name}));
+        var html = template({"title": title, "total": total, 
+                             "numfrogs": numfrogs, "numbirds": numbirds});
         this.$el.html(html);
     }	
 
 });
 
-app.menuview = new app.MenuView();
+app.infoview = new app.InfoView();
 
 
 
 // load sound locality sound files
-$.getJSON('./data/locality_sounds.json', function( data){
+$.getJSON('./data/locality_data_cached.json', function( data){
 	
    $.each( data.localities, function(key, val){
    		loc = new app.Locality(val);
@@ -171,9 +236,7 @@ function bindButtons(){
 	});
 
 	$('#critterlist').on('click', ".item", function(){
-
 		var $i = $(this);
-        console.log($i);
 		if($i.hasClass('playing')){
 			$i.find('audio').trigger('pause');
 			$i.removeClass('playing');
@@ -183,6 +246,7 @@ function bindButtons(){
 			$i.addClass('playing');
 		}
 	});
+
 
 	$('#info').on('click', '#cplayall', function(){
 		$('audio').trigger('play');
@@ -220,9 +284,6 @@ function pauseVisible(){
 }
 
 
-
-
-
 function addMenuItem(name){
 		
 		option = $('<li><a href="#">' + name + '</a></li>').on('click',  function(e){			
@@ -244,19 +305,18 @@ function markerClick(m){
 }	
 
 function select(name){
-	app.crittersView.filterByRegion(name).filterRandom(limit);
+    app.regionCritters = app.critters.getByRegion(name);
+    app.regionCritters.playRandom(limit);
 	app.crittersView.render();
+    app.infoview.render(name);
+    app.waitingView.render();
+    $('#playme').show();
+
+
     bounds = app.localities.get(name).get('bounds');
 	map.fitBounds(bounds);
-	updateInfoC(name);
 	playVisible();
-	
 }
 
-function updateInfoC(n){
-	//$('#info').empty();
-	app.menuview.render(n, app.crittersView.getInfo());
-
-}
 
 
