@@ -14,13 +14,16 @@ var playing = false; // sate
 map = new L.Map('map');
 
 var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-var gbifUrl='http://api.gbif.org/v1/map/density/tile?x={x}&y={y}&z={z}&type=TAXON&key=212';
-var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+var gbifBirdUrl='http://api.gbif.org/v1/map/density/tile?x={x}&y={y}&z={z}&type=TAXON&key=212';
+//var gbifFrogUrl='http://api.gbif.org/v1/map/density/tile?x={x}&y={y}&z={z}&type=TAXON&key=952&palette=greens';
+var osmAttrib=' Taxon Layer: <a href="http://gbif.org">GBIF</a> contributors | Base Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});		
-var gbif = new L.TileLayer(gbifUrl);
+var gbifbird = new L.TileLayer(gbifBirdUrl);
+//var gbiffrog = new L.TileLayer(gbifFrogUrl);
 
 map.addLayer(osm);
-map.addLayer(gbif);
+map.addLayer(gbifbird);
+//map.addLayer(gbiffrog);
 map.setView([0,0],1);
 
 // extend Marker so that we can track the locality id
@@ -274,7 +277,7 @@ app.infoview = new app.InfoView();
 
 
 // load sound locality sound files
-$.getJSON('./data/locality_data_cached.json', function( data){
+$.getJSON('./data/soundscape2.json', function( data){
 	
    $.each( data.localities, function(key, val){
    		loc = new app.Locality(val);
@@ -288,7 +291,7 @@ $.getJSON('./data/locality_data_cached.json', function( data){
    
    app.localities.each(function(loc){
 
-   	  var rectangle = new L.rectangle(loc.get('bounds'), {color: "#ff7800", weight: 1});
+   	  var rectangle = new L.rectangle(loc.get('bounds'), {color: "#ff7800", weight: 0, opacity: 0, fillOpacity: 0});
 	  var centre = rectangle.getBounds().getCenter();
 
 	  var marker = new customMarker(centre, {name: loc.get('name')})

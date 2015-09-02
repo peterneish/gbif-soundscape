@@ -4,3 +4,4 @@ npm-debug.log
 bower_components/wavesurfer.js/example
 **/data/images
 **/data/sounds
+**/data/extra

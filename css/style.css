@@ -42,13 +42,13 @@ span.glyphicon-lg {
 }
 
 
-
-
-
-
-.item img {
-	max-height: 200px;
+.item {
+    height: 400px;
 }
+
+
+
+
 
 .bird .thumbnail{
     background-color: #F0AD4E;
