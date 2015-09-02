@@ -57,6 +57,24 @@ app.Critters = Backbone.Collection.extend({
 
         this.set(randomCritters, {"remove": false});
     },
+    playRandomBirds: function(num){
+        this.invoke('set', {"playing": false});
+        randomBirds = _.sample(this.where({"type": "bird"}), num);
+        $.each(randomBirds,function(i, model){
+            model.attributes.playing = true;
+        });
+        this.set(randomBirds, {"remove": false});
+
+    },
+    playRandomFrogs: function(num){
+        this.invoke('set', {"playing": false});
+        randomFrogs = _.sample(this.where({"type": "frog"}), num);
+        $.each(randomFrogs,function(i, model){
+            model.attributes.playing = true;
+        });
+        this.set(randomFrogs, {"remove": false});
+
+    },
     numTotal: function(){
         return this.models.length;
     },
@@ -244,8 +262,35 @@ function bindButtons(){
 	$('#info').on('click', '#cplayrandom',function(){
 		app.regionCritters.playRandom(limit);
         app.crittersView.render();
+        app.waitingView.render();
         playVisible();
 	});
+
+    $('#info').on('click', '#playbirds',function(){
+        app.regionCritters.playRandomBirds(limit);
+        app.crittersView.render();
+        app.waitingView.render();
+        playVisible();
+    });
+    $('#info').on('click', '#playfrogs',function(){
+        app.regionCritters.playRandomFrogs(limit);
+        app.crittersView.render();
+        app.waitingView.render();
+        playVisible();
+    });
+
+    $('#info').on('click', '#playsummer',function(){
+        app.regionCritters.playRandom(limit);
+        app.crittersView.render();
+        app.waitingView.render();
+        playVisible();
+    });
+    $('#info').on('click', '#playwinter',function(){
+        app.regionCritters.playRandom(limit);
+        app.crittersView.render();
+        app.waitingView.render();
+        playVisible();
+    });
 
 	$('#critterlist').on('click', ".item", function(){
 		var $i = $(this);
@@ -327,6 +372,7 @@ function select(name){
     app.infoview.render(name);
     app.waitingView.render();
     $('#playme').show();
+    $('#playbuttons').show();
 
 
     bounds = app.localities.get(name).get('bounds');
