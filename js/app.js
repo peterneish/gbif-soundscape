@@ -87,11 +87,25 @@ app.Critters = Backbone.Collection.extend({
         var reg = $('#info h1').text();
         summerCritters = [];
         $.each(this.models, function(i, m){
-            var pos = m.attributes.region.indexOf(reg);
-            var season = m.attributes.season[pos];
-            if(season.length == 0 || season == "summer"){
+            //var pos = m.attributes.region.indexOf(reg);
+            //var season = m.attributes.season[pos];
+            //if(season.length == 0 || season == "summer"){
+            //    summerCritters.push(m);
+            //}
+
+            summer = true; // we'll assume it's summer unless we find winter
+            // we're actually looking for not winter
+            $.each(m.attributes.region, function(i, r){
+
+                if(m.attributes.season[i] == "winter"){
+                    summer = false;
+                    //console.log("winter");
+                }
+            });
+            if(summer){
                 summerCritters.push(m);
             }
+
         });
         summerCritters = _.sample(summerCritters, num);
         $.each(summerCritters, function(i, m){
@@ -105,9 +119,20 @@ app.Critters = Backbone.Collection.extend({
         var reg = $('#info h1').text();
         winterCritters = [];
         $.each(this.models, function(i, m){
-            var pos = m.attributes.region.indexOf(reg);
-            var season = m.attributes.season[pos];
-            if(season.length == 0 || season == "winter"){
+            //var pos = m.attributes.region.indexOf(reg);
+            //var season = m.attributes.season[pos];
+            //if(season.length == 0 || season == "winter"){
+            //    winterCritters.push(m);
+            //}
+            winter = true; // we'll assume it's summer unless we find winter
+            // we're actually looking for not winter
+            $.each(m.attributes.region, function(i, r){
+
+                if(m.attributes.season[i] == "summer"){
+                    winter = false;
+                }
+            });
+            if(winter){
                 winterCritters.push(m);
             }
         });
