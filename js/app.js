@@ -14,10 +14,13 @@ var playing = false; // sate
 map = new L.Map('map');
 
 var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+var gbifUrl='http://api.gbif.org/v1/map/density/tile?x={x}&y={y}&z={z}&type=TAXON&key=212';
 var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});		
+var gbif = new L.TileLayer(gbifUrl);
 
 map.addLayer(osm);
+map.addLayer(gbif);
 map.setView([0,0],1);
 
 // extend Marker so that we can track the locality id
