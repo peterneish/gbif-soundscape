@@ -6,8 +6,8 @@ var map;
 var localityLayer = new L.featureGroup();
 var sounds = [];
 var $iso;
-var limit = 3; // initial seed of playing critters
-var max = 36;   // maximum a user can add to playing
+var limit = 4; // initial seed of playing critters
+var max = 20;   // maximum a user can add to playing
 var playing = false; // sate
 
 // map details
@@ -260,12 +260,12 @@ function bindButtons(){
 	});
 
 
-	$('#info').on('click', '#cplayall', function(){
+	$('#sscape').on('click', '#cplayall', function(){
 		$('audio').trigger('play');
 		$('.item').addClass('playing');
 	});
 
-	$('#info').on('click', '#cplaypause', function(){
+	$('#sscape').on('click', '#cplaypause', function(){
 		$('audio').trigger('pause');
 		$('.item').removeClass('playing');
 	});
