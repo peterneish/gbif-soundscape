@@ -75,6 +75,42 @@ app.Critters = Backbone.Collection.extend({
         this.set(randomFrogs, {"remove": false});
 
     },
+    playRandomSummer: function(num){
+        this.invoke('set', {"playing": false});
+        // a hack to to get the current locality
+        var reg = $('#info h1').text();
+        summerCritters = [];
+        $.each(this.models, function(i, m){
+            var pos = m.attributes.region.indexOf(reg);
+            var season = m.attributes.season[pos];
+            if(season.length == 0 || season == "summer"){
+                summerCritters.push(m);
+            }
+        });
+        summerCritters = _.sample(summerCritters, num);
+        $.each(summerCritters, function(i, m){
+            m.attributes.playing = true;
+        })
+        this.set(summerCritters, {'remove': false});
+    },
+    playRandomWinter: function(num){
+        this.invoke('set', {"playing": false});
+        // a hack to to get the current locality
+        var reg = $('#info h1').text();
+        winterCritters = [];
+        $.each(this.models, function(i, m){
+            var pos = m.attributes.region.indexOf(reg);
+            var season = m.attributes.season[pos];
+            if(season.length == 0 || season == "winter"){
+                winterCritters.push(m);
+            }
+        });
+        winterCritters = _.sample(winterCritters, num);
+        $.each(winterCritters, function(i, m){
+            m.attributes.playing = true;
+        })
+        this.set(winterCritters, {'remove': false});
+    },
     numTotal: function(){
         return this.models.length;
     },
@@ -136,14 +172,16 @@ app.CritterWaitingView = Backbone.View.extend({
     },
     clicked: function(e){
         e.preventDefault();
-        console.log("numplaying:" + app.regionCritters.numPlaying()+ 
-            " max: " + max);
+
         if(app.regionCritters.numPlaying() < max){
             this.model.set({"playing" : true});
             app.regionCritters.trigger('reload');
             app.crittersView.render();
             app.waitingView.render();
             playVisible();
+        }
+        else{
+            $('#toomany').show().delay(2000).fadeOut();
         }
 
     },
@@ -165,14 +203,23 @@ app.CrittersPlayingView = Backbone.View.extend({
         this.listenTo(app.regionCritters, 'reload', this.render);
     },
     render: function () {
-        console.log("critter render!");
+        //console.log("critter render!");
 		this.$el.html("");
+        var numplaying = 0;
 		app.regionCritters.each( function(crit){
             if(crit.get('playing')){
 			     var critterView = new app.CritterPlayingView({model: crit});
 			     this.$el.append(critterView.render().el);
+                 numplaying++;
              }
 		}, this);
+
+        if(numplaying == 0){
+            $('#noresults').show();
+        }
+        else{
+            $('#noresults').hide();
+        }
 
 		return this;
     }
@@ -280,17 +327,25 @@ function bindButtons(){
     });
 
     $('#info').on('click', '#playsummer',function(){
-        app.regionCritters.playRandom(limit);
+        app.regionCritters.playRandomSummer(limit);
         app.crittersView.render();
         app.waitingView.render();
         playVisible();
     });
     $('#info').on('click', '#playwinter',function(){
-        app.regionCritters.playRandom(limit);
+        app.regionCritters.playRandomWinter(limit);
         app.crittersView.render();
         app.waitingView.render();
         playVisible();
     });
+
+    $('#info').on('click', '#clear',function(){
+        app.regionCritters.playRandom(0);
+        app.crittersView.render();
+        app.waitingView.render();
+        playVisible();
+    });
+
 
 	$('#critterlist').on('click', ".item", function(){
 		var $i = $(this);

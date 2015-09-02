@@ -71,6 +71,8 @@
           Click to add species to soundscape
         </div>
         <div class="panel-body">
+          <div id="toomany" style="display:none;" class="alert alert-danger">Sorry, you can't add more than 20 sounds (try removing some).
+          </div>
           <div id="waitinglist">
           </div>
         </div>
@@ -86,6 +88,11 @@
           <button id="cplaypause" type="button" class="btn btn-danger navbar-btn">
             <span class="glyphicon glyphicon-pause"></span>Pause
           </button> 
+
+          <div id="noresults" class="alert alert-warning" style="display:none;">
+            <p>There is nothing to play! Try creating a new random soundscape, or click the species on the right to add.
+            </p>
+          </div>
         </div>  
 
       <div id="critterlist">
@@ -186,7 +193,7 @@
        <button id="playwinter" type=button class="btn btn-default">Winter 
 
        </button>
-       <button type=button class="btn btn-danger">Clear
+       <button id="clear" type=button class="btn btn-danger">Clear
            <span class="glyphicon glyphicon-remove"></span>
        </button>
 
