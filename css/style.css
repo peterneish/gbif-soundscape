@@ -22,7 +22,7 @@ body {
 
 
 #map {
-	height: 300px;
+    height: 320px;
 }
 
 .clear {
@@ -41,13 +41,9 @@ span.glyphicon-lg {
 		font-size:36px;
 }
 
-
 .item {
-    height: 400px;
+    padding-bottom:5px;
 }
-
-
-
 
 
 .bird .thumbnail{

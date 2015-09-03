@@ -51,13 +51,14 @@
 
 
 
-      <div id="info" class="col-md-4 col-xs-6 col-lg-4">
+      <div id="info" class="col-md-4 col-xs-7 col-lg-4">
           <h1>Welcome to the GBIF Soundscape.</h1>
           <p>This is an entry in round 2 of the <a href="http://gbif2.devpost.com/">2015 Ebbe Nielsen Challenge</a> by Ben Raymond and Peter Neish.</p>
           <p>Here you can listen to sounds sourced from GBIF records. Read more about this project <a href="about.html">here</a>.</p>
           <p class="lead">To get started, please choose a locality from the map or the drop-down list above.</p>
       </div>
-      <div id="map" class="col-md-8 col-xs-6 col-lg-8">
+
+      <div id="map" class="col-md-8 col-xs-5 col-lg-8">
       </div>
     </div>
 	  <div class="row">
@@ -65,7 +66,7 @@
 
 
 
-      <div id="playme" class="col-md-4 col-xs-6" style="display:none;">
+      <div id="playme" class="col-md-4 col-xs-5" style="display:none;">
        <div class="panel panel-primary"> 
         <div class="panel-heading">
           Click to add species to soundscape
@@ -79,7 +80,7 @@
        </div>
       </div>
 
-       <div id="sscape" class="col-md-8 col-xs-6">
+       <div id="sscape" class="col-md-8 col-xs-7">
 
         <div id="playbuttons" class="text-center" style="display:none;">
            <button id="cplayall" type="button" class="play btn btn-primary"><span class="glyphicon glyphicon-play"></span> Play
@@ -109,15 +110,22 @@
 
 <!-- templates -->
 <script id="critterwaiting-template" type="text/template">
+<div class="media">
+
   <a href="#" class="list-group-item <%= (critter.get('type') == 'frog') ? 'list-group-item-success' : 'list-group-item-warning' %> <%= critter.get('type') %>">
+  <div class="media-left">
   <% if(typeof(critter.get('image'))!='undefined') { %>
                <img class="img-rounded" src="<%= critter.get('image') %>" 
                     alt="<% critter.get('name') %>">
   <% } %>
-  
+  </div>
+  <div class="media-body">
   <span class="pull-right glyphicon glyphicon-arrow-right"></span>
-  <%=critter.get('name')%>
+    <h5><em><%=critter.get('name')%></em></h5>
+    <%=critter.get('vernacularName')%>
+    </div>
   </a>
+ </div> 
 </script>
 
 
@@ -131,8 +139,8 @@
             <% } %>    
         <div class="caption">  
         <p class="clearfix">
-            <h4><%= critter.get('vernacularName') %></h4>
-            <h5><em><%= critter.get('name') %></em></h5>
+            <h4><em><%= critter.get('name') %></em></h4>
+            <h5><%= critter.get('vernacularName') %></h5>
         
             <audio controls loop style="display:none">
             <source src="<%= critter.get('audio') %>" type="audio/mpeg">
@@ -147,11 +155,11 @@
                 <% } %>
 
             </small>
-
+            <div style="margin-bottom:5px;">  
                 <button type="button" class="remove btn btn-default btn-xs pull-right">
                   <span class="glyphicon glyphicon-remove"></span> remove
                 </button>     
-                
+            </div>   
         </p>     
 
         </div>

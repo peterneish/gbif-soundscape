@@ -10,8 +10,6 @@
    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css">
    <link rel="stylesheet" href="css/style.css">
-   <link rel="css/wavesurfer/css/ribbon.css">
-   <link rel="css/wavesurfer/css/style.css">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -36,12 +34,126 @@
      </div>
     </nav>
 
-    <div id="container" class="container-fluid">
-      <p><a href="/">&lt; Back to GBIF Soundscape</a></p>
+    <div id="container" class="container">
+      <div style="margin-top: 10px;">
+        <p><a href="/">&lt; Back to GBIF Soundscape</a></p>
+    </div>
+    <div class"page-header">
       <h1>About GBIF SoundScape</h1>
-      <p>Ben Raymond and Peter Neish</p>
+    </div>
+      <p><b>Ben Raymond</b>, <a href="mailto:ben@untan.gl">ben@untan.gl</a></p>
+      <p><b>Peter Neish</b>,  <a href="https://twitter.com/@peterneish">@peterneish</a></p>
       <p>September 2015</p>
+
+    <h2>Introduction</h2>
+    <p>Unstructured data such as free text, images, sounds, and other media are less commonly used in biodiversity studies than structured information such as species occurrences. Nevertheless, these sources represent a rich stream of information, some of which is not generally available through more conventional sources. This information is of value for scientific, research, and conservation management use, as well as for communication and outreach to public and other audiences.</p>
+
+    <p>A <a href="http://gbif.blogspot.com.au/2014/05/multimedia-in-gbif.html">relatively recent development</a> in the GBIF portal and API is the registration of media (sound, images, or video) in occurrence records. Here, we use this facility to reconstruct the "soundscapes" of particular regions by compiling the bird and frog sounds from those regions.</p>
+
+    <p class="well">This second version of GBIF Soundscape builds upon our <a href="http://devpost.com/software/gbif-soundscape">previous entry</a> through a redesigned user interface. Users can now build their own soundscapes by adding and removing taxa through the site. Users can also generate soundscapes based on location, type of organism (bird or frog) and season (winter or summer). We have also included additional localities.</p>
+
+    <h2>Source code</h2>
+    <p>We do the data manipulation in <a href="http://cran.r-project.org/">R</a>, using the <a href="http://ropensci.org/tutorials/rgbif_tutorial.html">rgbif</a> package to interact with GBIF. The data processing source code is <a href="https://gist.github.com/raymondben/a6eb43b30e1194e40068">available here</a>. Note for users not familiar with R: if you get errors saying "there is no package called blah" then you just need install the package: <code>install.packages("blah")</code></p>
+
+
+    <h2>Data processing</h2>
+    <p>
+    Our aim is to find the sounds associated with the birds and frogs present in a region of interest. Ideally we could just search for occurrence records from our region of interest that also have associated media files. Unfortunately, though, most occurrence records are simple observations without associated media.
+    </p>
+
+    <p>
+    Our strategy instead is to use a general occurrence search to discover the taxa that are present in our region of interest, and then a secondary search for sound files for those same taxa (regardless of location). These media will almost certainly have been recorded at locations other than our region of interest, but in the same way images are used across different localities, we assume that a given species makes the same sounds worldwide &#x2014; note that this <a href="http://www.birds.cornell.edu/AllAboutBirds/studying/birdsongs/geographic/document_view">might not necessarily always be the case</a>.
+    </p>
+
+    <p>
+    Since there aren't very many occurrences of birds and frogs with sound media, the easiest approach is just to grab the lot, cache them locally, and filter them later according to other criteria. This also means that we only need to hit the GBIF servers once for this part of the processing.
+    </p>
+
+    <p>
+    We choose a region of interest and find out which bird and frog taxa occur there, then intersect that list of taxa with the list for which we have sound media. One media item per taxon is used, and we also retrieve an image for each taxon to use in the web interface.
+    </p>
+
+    <p>
+    For data-rich regions, we can apply additional filters according to the attributes of the data &#x2014; for example, by time of year, allowing seasonally-varying results. We investigated using time of day, but found that it did not give consistent results.
+    </p>
+
+    <p>
+    The processed data are summarised into a JSON-formatted file to be used by the web interface, including the appropriate citation details for each image and audio file. We have used a local cache of images and sounds to avoid latency and cross-site request issues with media files.
+    </p>
+
+    <h2>User interface</h2>
+    <p>
+    The web interface is written in javascript, using HTML5 audio elements. <a href="http://leafletjs.com/">Leaflet</a> provides the mapping functionality on an <a href="http://www.openstreetmap.org/">OpenStreetMap</a> base layer with an additional layer of <a href="http://www.gbif.org/developer/maps">GBIF bird records</a>. <a href="http://backbonejs.org/">Backbone</a> and <a href"http://underscorejs.org/">Underscore</a> provide a robust model for handling data and building views, while <a href="https://jquery.com/">jQuery</a> and <a href="http://get.bootstrap.com/">Bootstrap</a> handle interface components, events and layout.
+    </p>
+    <p>
+    A set of pre-processed regions are available for the user to select, either from the map or from a drop-down list:
+    </p>
+    <p>
+     
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="images/screen1.png" alt="select from list"/>
+        <div class="caption">
+          <p>Selecting a region of interest</p>
+        </div>
+    </div>
+    </div>
+
+    </p>
+    <p>
+    On selecting a region, the map zooms to the region extent (i.e. the spatial extent used to define the species list for the region). An initial soundscape is created from a random selection of the taxa present. The user is then able to add additonal taxa by clicking on any of taxa listed down the right hand side. Taxa can also be easily removed by clicking remove. At any time a user can generate a new soundscape based on all taxa, just frogs or birds, or by season (winter or summer). Global audio controls also allow the user to play or stop all sounds:
+    </p>
+
+    <p>
+     
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="images/screen2.png" alt="costa rica region selected"/>
+        <div class="caption">
+          <p>Selected region with species and audio controls shown</p>
+        </div>
+    </div>
+    </div>
+
+     </p>
+    </p>
+
+    The user can add up to 20 taxa to the soundscape, so as not to turn the soundscape into an overwhelming racket. This also helps to avoid crashing the browser, which seems to be a risk when playing many audio files at once.
+    </p>
+    <p>
+    A copy of the interface has been included in the submission. Use Firefox if running from a local copy: Chrome doesn't allow access to local json files with Ajax.
+    </p>
+    <p>
+    The live version of the web interface can be <a href="http://peterneish.github.io/gbif-soundscape/">accessed here</a>, and the <a href="https://github.com/peterneish/gbif-soundscape">source code is available</a>.
+    </p>
+    <p>
+    <h2>Limitations and biases</h2>
+    The results are limited by both the survey effort in the region of interest (i.e. how complete is the species list that we obtain for the region?) as well as the coverage of those taxa in terms of audio media.
+    </p>
+    </p>
+    Filtering and subsetting the results by attributes might fairly quickly reach a point where data coverage affects the results. For example, the seasonal species lists for Bavaria include 76 taxa that were found to be present in summer but not in winter, and 21 taxa that were found to be present in winter but not in summer. Some of these differences could be explained simply by survey effort, while others will reflect genuine season patterns of occupancy (e.g. the winter-only list includes the gull Larus marinus, which presumably could be migrating from far northern Europe to more temperate areas in winter).
+    </p>
+
+    <h2>Further work</h2>
+    <h3>Data processing</h3>
+    <p>The sound component of video media could be used to supplement the available audio files, although we didn't do it here.
+    </p>
+    </p>
+    Some sound media contain human voices, which strongly detract from the overall results. We excluded such audio clips here by avoiding all media from any provider that tended to have voices present — rather a brutal approach! We could have removed the first part of the sound file, when voices are usually present, or a more elegant solution would be to use some digital signal processing to identify periods of unwanted sounds (e.g. human voices, traffic noise). Periods of silence could also be removed, reducing long recordings down to shorter snippets of still-relevant audio.
+    </p>
+
+    <h3>User interface</h3>
+    <p>
+    The demonstration interface provides sounds and images for a number of pre-computed regions. We explored the option of allowing the user to select an arbitrary region of interest, however the the GBIF API does not provide a way to efficiently extract a species list in an arbitrary region of interest, and so this is not currently a practical option.
+    </p>
+
+    <h2>Notes on our experiences with sound media from GBIF</h2>
+      <p>
+    It's worth noting that, at the time of writing, other sound media were available through GBIF, but were not returned when the mediatype was specified. This was due to the required metadata not being recorded in the source. This is being followed up by the GBIF team.
+    </p>
+
+
       
-    </div>  
+ </div><!-- container -->  
 	
 </html>
