@@ -16,4 +16,4 @@ to run a local webserver, you can do something like this:
 ```
 python -m SimpleHTTPServer 8000
 ```
-and then visit http:\\localhost:8000 in a web browser.
+and then visit `http:\\localhost:8000` in a web browser.
