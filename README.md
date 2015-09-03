@@ -8,10 +8,12 @@ This round 2 entry builds upon our [previous entry](http://devpost.com/software/
 # Installation
 All files are included in the bundle, so either download the [zip file](https://github.com/peterneish/gbif-soundscape/archive/master.zip), or run:
 
-```git clone https://github.com/peterneish/gbif-soundscape.git
+```
+git clone https://github.com/peterneish/gbif-soundscape.git
 ```
 
 to run a local webserver, you can do something like this:
-``` python -m SimpleHTTPServer 8000
+```
+python -m SimpleHTTPServer 8000
 ```
 and then visit http:\\localhost:8000 in a web browser.
